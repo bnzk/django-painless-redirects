@@ -1,11 +1,10 @@
-"""Admin classes for the painless_redirects app."""
-# from django.contrib import admin
+# coding: utf-8
+from django.contrib import admin
 
-# from . import models
+from . import models
 
 
-# class YourModelAdmin(admin.ModelAdmin):
-#    list_display = ['some', 'fields', ]
-#    search_fields = ['some', 'fieds', ]
+class RedirectAdmin(admin.ModelAdmin):
+    search_fields = ['old_path', 'domain', 'new_path', ]
 
-# admin.site.register(models.YourModel, YourModelAdmin)
+admin.site.register(models.Redirect, RedirectAdmin)
