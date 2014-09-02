@@ -5,9 +5,9 @@ like django.contrib.redirects on steroids. maybe.
 
 planned (note to self):
 
-simple redirects table, with that bit more flexibility
-contrib packages with "magic" redirects for django-cms and django-folderless, SEO ftw.
-contrib package "force_site_domain"
+- simple redirects table, with that bit more flexibility
+- contrib packages with "magic" redirects for django-cms and django-folderless, SEO ftw.
+- contrib package "force_site_domain"
 
 
 Installation
