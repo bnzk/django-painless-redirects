@@ -1,0 +1,9 @@
+include AUTHORS
+include LICENSE
+include DESCRIPTION
+include CHANGELOG.txt
+include README.md
+graft painless_redirects
+global-exclude *.orig *.pyc *.log *.swp
+prune painless_redirects/tests/coverage
+prune painless_redirects/.ropeproject
