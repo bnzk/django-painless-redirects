@@ -1,6 +1,10 @@
 django painless redirects
 ============
 
+FAIR WARNING: dont take anything for real that is written here, as most of it
+is boilerplate text from https://github.com/bitmazk/django-reusable-app-template
+ (that is great, btw).
+
 like django.contrib.redirects on steroids. maybe.
 
 planned (note to self):
