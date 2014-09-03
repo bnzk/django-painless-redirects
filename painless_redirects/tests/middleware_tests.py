@@ -9,6 +9,7 @@ from ..middleware import ManualRedirectMiddleware
 class ManualRedirectMiddlewareTestCase(TestCase):
     """
     request.get_current_site() is always the default example.com fixture
+    check: http://blog.namis.me/2012/05/13/writing-unit-tests-for-django-middleware/
     """
     def setUp(self):
         self.middleware = ManualRedirectMiddleware()

@@ -4,6 +4,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.sites.models import Site
 
 
+REDIRECT_TYPE_CHOICES = (
+    (301, "Moved permanently"),
+    (302, "Moved temporary"),
+)
+
 class Redirect(models.Model):
     site = models.ForeignKey(Site, null=True, blank=True,
         related_name="redirect_old_site",
@@ -17,6 +22,11 @@ class Redirect(models.Model):
     new_site = models.ForeignKey(Site, null=True, blank=True,
         related_name="redirect_new_site",
         help_text=_(u'Optional, automatically insert correct domain name of this site.'))
+    #redirect_type = models.SmallIntegerField(
+    #    choices=REDIRECT_TYPE_CHOICES, default=301,
+    #    help_text=_(u"You know what you do, right?"))
+    #preserve_get = models.BooleanField(default=False)
+
 
     def redirect_value(self):
         if self.new_site:
@@ -30,8 +40,8 @@ class Redirect(models.Model):
                 self.domain, self.old_path, self.new_site, self.new_path
             )
         else:
-            return u"%s%s ---> %s%s" % (
-                self.site, self.old_path, self.new_site, self.new_path
+            return u"%s%s ---> %s" % (
+                getattr(self.site, "domain", ""), self.old_path, self.redirect_value()
             )
 
     class Meta:
