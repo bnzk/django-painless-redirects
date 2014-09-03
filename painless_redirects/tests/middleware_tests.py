@@ -1,11 +1,10 @@
 """Tests for the models of the painless_redirects app."""
 from django.test import TestCase
-from django.contrib.sites.models import Site
 from mock import Mock
 
 from . import factories
-from ..models import Redirect
 from ..middleware import ManualRedirectMiddleware
+
 
 class ManualRedirectMiddlewareTestCase(TestCase):
     """

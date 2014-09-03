@@ -1,6 +1,7 @@
 """Settings that need to be set in order to run the tests."""
 import os
 import logging
+import django.conf.global_settings as DEFAULT_SETTINGS
 
 DEBUG = True
 
@@ -56,6 +57,10 @@ INTERNAL_APPS = [
     'painless_redirects',
     'painless_redirects.tests.test_app',
 ]
+
+MIDDLEWARE_CLASSES = DEFAULT_SETTINGS.MIDDLEWARE_CLASSES + (
+    "painless_redirects.middleware.ManualRedirectMiddleware",
+)
 
 INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS
 COVERAGE_MODULE_EXCLUDES += EXTERNAL_APPS
