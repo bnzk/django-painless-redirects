@@ -22,6 +22,11 @@ class ForceSiteDomainRedirectMiddlewareTestCase(TestCase):
         response = self.middleware.process_request(self.request)
         self.assertEqual(response, None)
 
+    def test_debug_no_redirect(self):
+        with self.settings(DEBUG=True):
+            response = self.middleware.process_request(self.request)
+            self.assertEqual(response, None)
+
     def test_must_redirect(self):
         response = self.middleware.process_request(self.request)
         self.assertEqual(response.status_code, 301)
