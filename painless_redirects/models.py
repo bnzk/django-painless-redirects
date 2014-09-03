@@ -9,7 +9,9 @@ REDIRECT_TYPE_CHOICES = (
     (302, "Moved temporary"),
 )
 
+
 class Redirect(models.Model):
+    # creator = models.CharField(_(u'Creator'), max_length=128, blank=True)
     site = models.ForeignKey(Site, null=True, blank=True,
         related_name="redirect_old_site",
         help_text=_(u'Optional, limit redirect to this site.'))
@@ -22,11 +24,10 @@ class Redirect(models.Model):
     new_site = models.ForeignKey(Site, null=True, blank=True,
         related_name="redirect_new_site",
         help_text=_(u'Optional, automatically insert correct domain name of this site.'))
-    #redirect_type = models.SmallIntegerField(
+    # redirect_type = models.SmallIntegerField(
     #    choices=REDIRECT_TYPE_CHOICES, default=301,
     #    help_text=_(u"You know what you do, right?"))
-    #preserve_get = models.BooleanField(default=False)
-
+    # preserve_get = models.BooleanField(default=False)
 
     def redirect_value(self):
         if self.new_site:

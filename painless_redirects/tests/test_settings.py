@@ -60,6 +60,7 @@ INTERNAL_APPS = [
 
 MIDDLEWARE_CLASSES = DEFAULT_SETTINGS.MIDDLEWARE_CLASSES + (
     "painless_redirects.middleware.ManualRedirectMiddleware",
+    "painless_redirects.middleware.ForceSiteDomainRedirectMiddleware",
 )
 
 INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS

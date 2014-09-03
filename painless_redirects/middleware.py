@@ -1,8 +1,31 @@
 # coding: utf-8
+from django.conf import settings
 from django import http
+from django.utils.http import urlquote
 from django.contrib.sites.models import Site
 
 from .models import Redirect
+
+
+class ForceSiteDomainRedirectMiddleware(object):
+    """
+    redirect to the main domain, if not yet there.
+    do nothing if settings.DEBUG
+    """
+    def process_request(self, request):
+        if settings.DEBUG:
+            return None
+        host = request.get_host()
+        site = Site.objects.get_current()
+        if host == site.domain:
+            return None
+        new_uri = '%s://%s%s%s' % (
+            request.is_secure() and 'https' or 'http',
+            site.domain,
+            urlquote(request.path),
+            len(request.GET) > 0 and '?%s' % request.GET.urlencode() or ''
+        )
+        return http.HttpResponsePermanentRedirect(new_uri)
 
 
 class ManualRedirectMiddleware(object):
