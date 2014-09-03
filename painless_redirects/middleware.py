@@ -24,7 +24,7 @@ class ManualRedirectMiddleware(object):
         # better match?
         try:
             redirect = Redirect.objects.get(domain=host,
-                                     old_path=request.get_full_path())
+                                     old_path=request.path)
         except Redirect.DoesNotExist:
             pass
         if redirect is not None:
@@ -42,7 +42,7 @@ class ManualRedirectMiddleware(object):
             # No need to check for a redirect for non-404 responses.
             return response
         current_site = Site.objects.get_current()
-        current_path = request.get_full_path()
+        current_path = request.path
         redirect = None
         try:
             redirect = Redirect.objects.get(old_path=current_path)
@@ -54,5 +54,5 @@ class ManualRedirectMiddleware(object):
         except Redirect.DoesNotExist:
             pass
         if redirect is not None:
-            return http.HttpResponsePermanentRedirect(redirect.new_path)
+            return http.HttpResponsePermanentRedirect(redirect.redirect_value())
         return response
