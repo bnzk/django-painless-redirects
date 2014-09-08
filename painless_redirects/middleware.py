@@ -46,8 +46,8 @@ class ManualRedirectMiddleware(object):
             pass
         # better match?
         try:
-            redirect = Redirect.objects.get(domain=host,
-                                     old_path=request.path)
+            redirect = Redirect.objects.get(
+                domain=host, old_path=request.path)
         except Redirect.DoesNotExist:
             pass
         if redirect is not None:
@@ -64,18 +64,56 @@ class ManualRedirectMiddleware(object):
         if response.status_code != 404:
             # No need to check for a redirect for non-404 responses.
             return response
+        # TODO: this exception code looks like mess. and not DRY
+        # TODO: handle get with multiple objects returned!
         current_site = Site.objects.get_current()
         current_path = request.path
         redirect = None
+        # exact match of path and site. yay.
         try:
-            redirect = Redirect.objects.get(old_path=current_path)
+            redirect = Redirect.objects.get(
+                old_path=current_path, site=current_site)
         except Redirect.DoesNotExist:
             pass
-        try:
-            redirect = Redirect.objects.get(old_path=current_path,
-                                            site=current_site)
-        except Redirect.DoesNotExist:
-            pass
+        # wildcard match, with matching site
+        if not redirect:
+            remaining_path, rubbish = current_path.rsplit("/", 1)
+            right_path =  ""
+            while remaining_path:
+                try:
+                    redirect = Redirect.objects.get(
+                        old_path=remaining_path + "/", wildcard_match=True,
+                        site=current_site)
+                except Redirect.DoesNotExist:
+                    pass
+                if redirect:
+                    break
+                remaining_path, right_side = remaining_path.rsplit("/", 1)
+                right_path = "%s/%s" % (right_side, right_path)
+        # exact path match
+        if not redirect:
+            try:
+                redirect = Redirect.objects.get(old_path=current_path,
+                                                site=None)
+            except Redirect.DoesNotExist:
+                pass
+        # wildcard match
+        if not redirect:
+            remaining_path, rubbish = current_path.rsplit("/", 1)
+            right_path =  ""
+            while remaining_path:
+                try:
+                    redirect = Redirect.objects.get(
+                        old_path=remaining_path + "/", wildcard_match=True,
+                        site= None)
+                except Redirect.DoesNotExist:
+                    pass
+                if redirect:
+                    break
+                remaining_path, right_side = remaining_path.rsplit("/", 1)
+                right_path = "%s/%s" % (right_side, right_path)
+        print redirect
         if redirect is not None:
             return http.HttpResponsePermanentRedirect(redirect.redirect_value())
         return response
+

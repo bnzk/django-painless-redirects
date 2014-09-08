@@ -19,3 +19,4 @@ class RedirectFactory(factory.DjangoModelFactory):
 
     old_path = "/the-old-path/"
     new_path = "/the-new-path/"
+

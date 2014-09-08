@@ -20,6 +20,9 @@ DATABASES = {
     }
 }
 
+NOSE_ARGS = ['--nocapture',
+             '--nologcapture',]
+
 ROOT_URLCONF = 'painless_redirects.tests.urls'
 
 STATIC_URL = '/static/'

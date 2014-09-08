@@ -1,4 +1,5 @@
 """Tests for the models of the painless_redirects app."""
+from django.contrib.sites.models import Site
 from django.http import QueryDict
 from django.test import TestCase
 from mock import Mock
@@ -72,6 +73,16 @@ class ManualRedirectMiddlewareTestCase(TestCase):
             self.middleware.process_response(self.request, self.response),
             self.response)
 
+    def test_no_redirect_when_site_specified(self):
+        obj = factories.RedirectFactory()
+        obj.site = factories.SiteFactory()
+        obj.save()
+        self.request.path = obj.old_path
+        self.response.status_code = 404
+        self.assertEqual(
+            self.middleware.process_response(self.request, self.response),
+            self.response)
+
     def test_simple_redirect(self):
         obj = factories.RedirectFactory()
         self.response.status_code = 404
@@ -90,3 +101,26 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.assertEqual(response.status_code, 301)
         self.assertEqual(
             response.url, "%s%s" % (obj.new_site.domain, obj.new_path))
+
+    def test_wildcard_redirect(self):
+        obj = factories.RedirectFactory()
+        obj.old_path = "/the-wildcard/yes/"
+        obj.wildcard_match = True
+        obj.save()
+        self.response.status_code = 404
+        self.request.path = "%sthe/right/part/" % obj.old_path
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, "/the-new-path/")
+
+    def test_wildcard_redirect_with_site(self):
+        obj = factories.RedirectFactory()
+        obj.site = Site.objects.get_current()
+        obj.old_path = "/the-wildcard/yes/"
+        obj.wildcard_match = True
+        obj.save()
+        self.response.status_code = 404
+        self.request.path = "%sthe/right/part/" % obj.old_path
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, "/the-new-path/")
