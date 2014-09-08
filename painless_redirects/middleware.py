@@ -78,7 +78,7 @@ class ManualRedirectMiddleware(object):
         # wildcard match, with matching site
         if not redirect:
             remaining_path, rubbish = current_path.rsplit("/", 1)
-            right_path =  ""
+            right_path = ""
             while remaining_path:
                 try:
                     redirect = Redirect.objects.get(
@@ -100,20 +100,18 @@ class ManualRedirectMiddleware(object):
         # wildcard match
         if not redirect:
             remaining_path, rubbish = current_path.rsplit("/", 1)
-            right_path =  ""
+            right_path = ""
             while remaining_path:
                 try:
                     redirect = Redirect.objects.get(
                         old_path=remaining_path + "/", wildcard_match=True,
-                        site= None)
+                        site=None)
                 except Redirect.DoesNotExist:
                     pass
                 if redirect:
                     break
                 remaining_path, right_side = remaining_path.rsplit("/", 1)
                 right_path = "%s/%s" % (right_side, right_path)
-        print redirect
         if redirect is not None:
             return http.HttpResponsePermanentRedirect(redirect.redirect_value())
         return response
-

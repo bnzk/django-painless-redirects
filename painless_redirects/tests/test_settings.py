@@ -21,7 +21,7 @@ DATABASES = {
 }
 
 NOSE_ARGS = ['--nocapture',
-             '--nologcapture',]
+             '--nologcapture', ]
 
 ROOT_URLCONF = 'painless_redirects.tests.urls'
 
