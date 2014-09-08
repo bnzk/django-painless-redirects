@@ -18,10 +18,10 @@ class Migration(SchemaMigration):
         db.alter_column(u'painless_redirects_redirect', 'domain', self.gf('django.db.models.fields.CharField')(max_length=64))
 
         # Changing field 'Redirect.new_path'
-        db.alter_column(u'painless_redirects_redirect', 'new_path', self.gf('django.db.models.fields.CharField')(max_length=512))
+        db.alter_column(u'painless_redirects_redirect', 'new_path', self.gf('django.db.models.fields.CharField')(max_length=333))
 
         # Changing field 'Redirect.old_path'
-        db.alter_column(u'painless_redirects_redirect', 'old_path', self.gf('django.db.models.fields.CharField')(max_length=512))
+        db.alter_column(u'painless_redirects_redirect', 'old_path', self.gf('django.db.models.fields.CharField')(max_length=333))
         # Adding index on 'Redirect', fields ['old_path']
         db.create_index(u'painless_redirects_redirect', ['old_path'])
 
