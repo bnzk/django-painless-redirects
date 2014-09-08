@@ -11,17 +11,19 @@ REDIRECT_TYPE_CHOICES = (
 
 
 class Redirect(models.Model):
+    # max length note: mysql index cannot be more than 1000bytes, so with utf-8,
+    # we can have no more than max_length=333 for old_path
     # creator = models.CharField(_(u'Creator'), max_length=128, blank=True)
     site = models.ForeignKey(Site, null=True, blank=True,
         related_name="redirect_old_site",
         help_text=_(u'Optional, limit redirect to this site.'))
     domain = models.CharField(max_length=64, blank=True,
         help_text=_(u'Optional, exlicitly limit to specific domain.'))
-    old_path = models.CharField(_(u'From path'), max_length=512, db_index=True,
+    old_path = models.CharField(_(u'From path'), max_length=333, db_index=True,
         help_text=_("This should be an absolute path, excluding the domain name. Example: '/events/search/'."))
     wildcard_match = models.BooleanField(_(u'Wildcard mode'), default=False,
         help_text=_(u'Add wildcard (*) to from path'))
-    new_path = models.CharField(_(u'To'), max_length=512,
+    new_path = models.CharField(_(u'To'), max_length=333,
         help_text=_(u'Absolute path, or full url (with http://.../).'))
     new_site = models.ForeignKey(Site, null=True, blank=True,
         related_name="redirect_new_site",
