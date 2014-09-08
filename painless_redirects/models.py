@@ -40,13 +40,14 @@ class Redirect(models.Model):
             return self.new_path
 
     def __unicode__(self):
+        wildcard = "*" if self.wildcard_match else ""
         if self.domain:
-            return u"%s%s ---> %s%s " % (
-                self.domain, self.old_path, self.new_site, self.new_path
+            return u"%s%s%s ---> %s%s " % (
+                self.domain, self.old_path, wildcard, self.new_site, self.new_path
             )
         else:
-            return u"%s%s ---> %s" % (
-                getattr(self.site, "domain", ""), self.old_path, self.redirect_value()
+            return u"%s%s%s ---> %s" % (
+                getattr(self.site, "domain", ""), self.old_path, wildcard, self.redirect_value()
             )
 
     class Meta:
