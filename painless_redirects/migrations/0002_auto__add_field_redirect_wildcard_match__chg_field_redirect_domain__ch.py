@@ -13,6 +13,15 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.BooleanField')(default=False),
                       keep_default=False)
 
+
+        # Changing field 'Redirect.domain'
+        db.alter_column(u'painless_redirects_redirect', 'domain', self.gf('django.db.models.fields.CharField')(max_length=64))
+
+        # Changing field 'Redirect.new_path'
+        db.alter_column(u'painless_redirects_redirect', 'new_path', self.gf('django.db.models.fields.CharField')(max_length=512))
+
+        # Changing field 'Redirect.old_path'
+        db.alter_column(u'painless_redirects_redirect', 'old_path', self.gf('django.db.models.fields.CharField')(max_length=512))
         # Adding index on 'Redirect', fields ['old_path']
         db.create_index(u'painless_redirects_redirect', ['old_path'])
 
@@ -25,14 +34,23 @@ class Migration(SchemaMigration):
         db.delete_column(u'painless_redirects_redirect', 'wildcard_match')
 
 
+        # Changing field 'Redirect.domain'
+        db.alter_column(u'painless_redirects_redirect', 'domain', self.gf('django.db.models.fields.CharField')(max_length=1024))
+
+        # Changing field 'Redirect.new_path'
+        db.alter_column(u'painless_redirects_redirect', 'new_path', self.gf('django.db.models.fields.CharField')(max_length=1024))
+
+        # Changing field 'Redirect.old_path'
+        db.alter_column(u'painless_redirects_redirect', 'old_path', self.gf('django.db.models.fields.CharField')(max_length=1024))
+
     models = {
         u'painless_redirects.redirect': {
             'Meta': {'object_name': 'Redirect'},
-            'domain': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'blank': 'True'}),
+            'domain': ('django.db.models.fields.CharField', [], {'max_length': '64', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'new_path': ('django.db.models.fields.CharField', [], {'max_length': '1024'}),
+            'new_path': ('django.db.models.fields.CharField', [], {'max_length': '512'}),
             'new_site': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'redirect_new_site'", 'null': 'True', 'to': u"orm['sites.Site']"}),
-            'old_path': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'db_index': 'True'}),
+            'old_path': ('django.db.models.fields.CharField', [], {'max_length': '512', 'db_index': 'True'}),
             'site': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'redirect_old_site'", 'null': 'True', 'to': u"orm['sites.Site']"}),
             'wildcard_match': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
         },
