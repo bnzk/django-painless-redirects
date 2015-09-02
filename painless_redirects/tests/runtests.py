@@ -16,7 +16,7 @@ import coverage
 from fabric.api import abort, lcd, local
 from fabric.colors import green, red
 
-import test_settings
+from settings import test_settings
 
 
 if not settings.configured:
@@ -26,6 +26,8 @@ if not settings.configured:
 from django_coverage.coverage_runner import CoverageRunner
 from django_nose import NoseTestSuiteRunner
 
+
+# NOT used ATM! use ./manage.py test painless_redirects
 
 class NoseCoverageTestRunner(CoverageRunner, NoseTestSuiteRunner):
     """Custom test runner that uses nose and coverage"""

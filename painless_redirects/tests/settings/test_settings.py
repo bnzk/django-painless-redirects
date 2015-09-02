@@ -62,6 +62,9 @@ INTERNAL_APPS = [
 ]
 
 MIDDLEWARE_CLASSES = DEFAULT_SETTINGS.MIDDLEWARE_CLASSES + (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     "painless_redirects.middleware.ManualRedirectMiddleware",
     "painless_redirects.middleware.ForceSiteDomainRedirectMiddleware",
 )
