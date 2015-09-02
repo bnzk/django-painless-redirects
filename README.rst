@@ -12,6 +12,10 @@ planned (note to self):
 - contrib packages with "magic" redirects for django-cms and django-folderless, SEO ftw.
 - contrib package "force_site_domain"
 
+more not to self:
+
+- not forget APPEND_SLASH (when trying to redirect /whatever/was-here.html)
+- more?
 
 Installation
 ------------
