@@ -91,6 +91,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")
 
+    # TODO: this is not what works! one should add http(s)://
     def test_new_site_redirect(self):
         obj = factories.RedirectFactory()
         obj.new_site = factories.SiteFactory()
@@ -121,6 +122,16 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         obj.save()
         self.response.status_code = 404
         self.request.path = "%sthe/right/part/" % obj.old_path
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, "/the-new-path/")
+
+    def test_redirect_without_slash(self):
+        obj = factories.RedirectFactory()
+        obj.old_path = '/whatever/check.html'
+        obj.save()
+        self.request.path = obj.old_path
+        self.response.status_code = 404
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")

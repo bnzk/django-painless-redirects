@@ -113,5 +113,7 @@ class ManualRedirectMiddleware(object):
                 remaining_path, right_side = remaining_path.rsplit("/", 1)
                 right_path = "%s/%s" % (right_side, right_path)
         if redirect is not None:
-            return http.HttpResponsePermanentRedirect(redirect.redirect_value())
+            to_redirect = redirect.redirect_value()
+            # TODO: if domain was set, add schema (https/http)
+            return http.HttpResponsePermanentRedirect(to_redirect)
         return response
