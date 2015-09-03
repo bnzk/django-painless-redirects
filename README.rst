@@ -17,6 +17,10 @@ more not to self:
 - not forget APPEND_SLASH (when trying to redirect /whatever/was-here.html)
 - more?
 
+Development
+-----------
+there is test app, available with ./manage.py runserver. to run tests: ./manage.py test
+
 Installation
 ------------
 
