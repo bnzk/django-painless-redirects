@@ -2,7 +2,7 @@
 from django.contrib.sites.models import Site
 from django.http import QueryDict
 from django.test import TestCase
-from mock import Mock, MagicMock
+from mock import Mock
 
 from . import factories
 from ..middleware import ManualRedirectMiddleware, ForceSiteDomainRedirectMiddleware
