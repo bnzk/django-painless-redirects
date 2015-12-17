@@ -68,6 +68,8 @@ class ManualRedirectMiddleware(object):
         # TODO: handle get with multiple objects returned!
         current_site = Site.objects.get_current()
         current_path = request.path
+        if request.META.get('QUERY_STRING', None):
+            current_path += "?" + request.META.get('QUERY_STRING')
         redirect = None
         # exact match of path and site. yay.
         try:

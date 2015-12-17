@@ -2,7 +2,7 @@
 from django.contrib.sites.models import Site
 from django.http import QueryDict
 from django.test import TestCase
-from mock import Mock
+from mock import Mock, MagicMock
 
 from . import factories
 from ..middleware import ManualRedirectMiddleware, ForceSiteDomainRedirectMiddleware
@@ -15,6 +15,7 @@ class ForceSiteDomainRedirectMiddlewareTestCase(TestCase):
         self.request = Mock()
         self.request.is_secure = lambda: False
         self.request.get_host = lambda: "nogood.com"
+        self.request.META = {}
         self.request.GET = QueryDict("")
         self.request.path = "/"
 
@@ -55,6 +56,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
     def setUp(self):
         self.middleware = ManualRedirectMiddleware()
         self.request = Mock()
+        self.request.META = {}
         self.response = Mock()
 
     def test_no_404(self):
