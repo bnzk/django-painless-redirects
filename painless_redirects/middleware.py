@@ -82,16 +82,14 @@ class ManualRedirectMiddleware(object):
                 right_path = "%s/%s" % (right_side, right_path)
         # exact path match
         if not redirect.count():
-            redirect = Redirect.objects.filter(old_path=current_path,
-                                            site=None)
+            redirect = Redirect.objects.filter(old_path=current_path, site=None)
         # wildcard match
         if not redirect.count():
             remaining_path, rubbish = current_path.rsplit("/", 1)
             right_path = ""
             while remaining_path:
                 redirect = Redirect.objects.filter(
-                    old_path=remaining_path + "/", wildcard_match=True,
-                    site=None)
+                    old_path=remaining_path + "/", wildcard_match=True, site=None)
                 if redirect.count():
                     break
                 remaining_path, right_side = remaining_path.rsplit("/", 1)
