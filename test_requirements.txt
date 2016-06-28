@@ -1,4 +1,5 @@
 django-nose
+django-cms
 coverage
 django-coverage
 ipdb

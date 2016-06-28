@@ -32,8 +32,6 @@ class Redirect(models.Model):
     #    choices=REDIRECT_TYPE_CHOICES, default=301,
     #    help_text=_(u"You know what you do, right?"))
     # preserve_get = models.BooleanField(default=False)
-    # maybe even add as global setting?!
-    # force_https = models.BooleanField(default=False)
 
     def redirect_value(self):
         if self.new_site:
