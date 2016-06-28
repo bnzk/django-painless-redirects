@@ -39,18 +39,12 @@ class ManualRedirectMiddleware(object):
         if host == current_site.domain:
             return None
         redirect = None
-        # first try?
-        try:
-            redirect = Redirect.objects.get(domain=host)
-        except Redirect.DoesNotExist:
-            pass
         # better match?
-        try:
-            redirect = Redirect.objects.get(
-                domain=host, old_path=request.path)
-        except Redirect.DoesNotExist:
-            pass
-        if redirect is not None:
+        redirect = Redirect.objects.filter(domain=host, old_path=request.path)
+        # only domain. redirect anyway!
+        if not redirect.count():
+            redirect = Redirect.objects.filter(domain=host)
+        if redirect.count():
             new_uri = '%s://%s%s' % (
                 request.is_secure() and 'https' or 'http',
                 redirect.redirect_value()
@@ -72,50 +66,38 @@ class ManualRedirectMiddleware(object):
             current_path += "?" + request.META.get('QUERY_STRING')
         redirect = None
         # exact match of path and site. yay.
-        try:
-            redirect = Redirect.objects.get(
-                old_path=current_path, site=current_site)
-        except Redirect.DoesNotExist:
-            pass
+        redirect = Redirect.objects.filter(
+            old_path=current_path, site=current_site)
         # wildcard match, with matching site
-        if not redirect:
+        if not redirect.count():
             remaining_path, rubbish = current_path.rsplit("/", 1)
             right_path = ""
             while remaining_path:
-                try:
-                    redirect = Redirect.objects.get(
-                        old_path=remaining_path + "/", wildcard_match=True,
-                        site=current_site)
-                except Redirect.DoesNotExist:
-                    pass
-                if redirect:
+                redirect = Redirect.objects.filter(
+                    old_path=remaining_path + "/", wildcard_match=True,
+                    site=current_site)
+                if redirect.count():
                     break
                 remaining_path, right_side = remaining_path.rsplit("/", 1)
                 right_path = "%s/%s" % (right_side, right_path)
         # exact path match
-        if not redirect:
-            try:
-                redirect = Redirect.objects.get(old_path=current_path,
-                                                site=None)
-            except Redirect.DoesNotExist:
-                pass
+        if not redirect.count():
+            redirect = Redirect.objects.filter(old_path=current_path,
+                                            site=None)
         # wildcard match
-        if not redirect:
+        if not redirect.count():
             remaining_path, rubbish = current_path.rsplit("/", 1)
             right_path = ""
             while remaining_path:
-                try:
-                    redirect = Redirect.objects.get(
-                        old_path=remaining_path + "/", wildcard_match=True,
-                        site=None)
-                except Redirect.DoesNotExist:
-                    pass
-                if redirect:
+                redirect = Redirect.objects.filter(
+                    old_path=remaining_path + "/", wildcard_match=True,
+                    site=None)
+                if redirect.count():
                     break
                 remaining_path, right_side = remaining_path.rsplit("/", 1)
                 right_path = "%s/%s" % (right_side, right_path)
-        if redirect is not None:
-            to_redirect = redirect.redirect_value()
+        if redirect.count():
+            to_redirect = redirect[0].redirect_value()
             # TODO: if domain was set, add schema (https/http)
             return http.HttpResponsePermanentRedirect(to_redirect)
         return response

@@ -30,8 +30,14 @@ class Redirect(models.Model):
         help_text=_(u'Optional, automatically insert correct domain name of this site.'))
     # redirect_type = models.SmallIntegerField(
     #    choices=REDIRECT_TYPE_CHOICES, default=301,
-    #    help_text=_(u"You know what you do, right?"))
+    #    help_text=_(u"You know what you do, right? (If not: 301)"))
     # preserve_get = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = "Redirect"
+        verbose_name_plural = "Redirects"
+        unique_together = (('site', 'domain', 'old_path', ), )
+        ordering = ('old_path', )
 
     def redirect_value(self):
         if self.new_site:
@@ -49,7 +55,3 @@ class Redirect(models.Model):
             return u"%s%s%s ---> %s" % (
                 getattr(self.site, "domain", ""), self.old_path, wildcard, self.redirect_value()
             )
-
-    class Meta:
-        verbose_name = "Redirect"
-        verbose_name_plural = "Redirects"
