@@ -15,6 +15,7 @@ class ForceSiteDomainRedirectMiddlewareTestCase(TestCase):
         self.request = Mock()
         self.request.is_secure = lambda: False
         self.request.get_host = lambda: "nogood.com"
+        self.request.META = {}
         self.request.GET = QueryDict("")
         self.request.path = "/"
 
@@ -55,6 +56,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
     def setUp(self):
         self.middleware = ManualRedirectMiddleware()
         self.request = Mock()
+        self.request.META = {}
         self.response = Mock()
 
     def test_no_404(self):
