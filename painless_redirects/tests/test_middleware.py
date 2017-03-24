@@ -42,10 +42,10 @@ class ForceSiteDomainRedirectMiddlewareTestCase(TestCase):
 
     def test_must_redirect_preserves_getvars(self):
         self.request.path = "/abc/def/yeah/"
-        self.request.GET = QueryDict("karma=true&param=value")
+        self.request.GET = QueryDict("karma=true")
         response = self.middleware.process_request(self.request)
         self.assertEqual(response.status_code, 301)
-        self.assertEqual(response.url, "http://example.com/abc/def/yeah/?karma=true&param=value")
+        self.assertEqual(response.url, "http://example.com/abc/def/yeah/?karma=true")
 
 
 class ManualRedirectMiddlewareTestCase(TestCase):
