@@ -4,3 +4,4 @@ django-coverage
 factory_boy
 mock
 selenium
+tox
