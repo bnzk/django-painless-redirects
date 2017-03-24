@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('painless_redirects', '0001_squashed_0002_auto_20150903_0643'),
+        ('painless_redirects', '0002_auto_20150903_0643'),
     ]
 
     operations = [
