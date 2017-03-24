@@ -79,10 +79,12 @@ INTERNAL_APPS = [
     'painless_redirects.tests.test_app',
 ]
 
-MIDDLEWARE_CLASSES = DEFAULT_SETTINGS.MIDDLEWARE_CLASSES + [
+MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     "painless_redirects.middleware.ManualRedirectMiddleware",
     "painless_redirects.middleware.ForceSiteDomainRedirectMiddleware",
 ]
