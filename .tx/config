@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[django-painless-redirects.main]
+file_filter = painless_redirects/locale/<lang>/LC_MESSAGES/django.po
+source_file = painless_redirects/locale/en/LC_MESSAGES/django.po
+source_lang = en
+type = PO
