@@ -49,6 +49,7 @@ If you want to be redirected to the domain name entered in your current site (dj
 also add this middleware:
 
 .. code-block:: bash
+
     painless_redirects.middleware.ForceSiteDomainRedirectMiddleware
 
 
