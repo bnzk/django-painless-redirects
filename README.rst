@@ -55,7 +55,9 @@ also add this middleware:
 Development
 ------------
 
-there is test app, available with ./manage.py runserver. to run tests: ./manage.py test
+- there is test app, available with `./manage.py runserver`.
+- to run tests: ./manage.py test
+- to run tests with django 1.8 / 1.9 / 1.10: `tox`
 
 
 Contributions
