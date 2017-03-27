@@ -38,18 +38,18 @@ Add ``painless_redirects`` to your ``INSTALLED_APPS``
         'painless_redirects',
     )
 
-
 Add the following middlware to MIDDLEWARE_CLASSES (1.10 style middlewares will be supported soon),
 to make basic redirects work.
 
 .. code-block:: bash
 
-    'painless_redirects.middleware.ManualRedirectMiddleware',
+    painless_redirects.middleware.ManualRedirectMiddleware
 
 If you want to be redirected to the domain name entered in your current site (django.contrib.sites must be installed),
 also add this middleware:
 
-    'painless_redirects.middleware.ForceSiteDomainRedirectMiddleware',
+.. code-block:: bash
+    painless_redirects.middleware.ForceSiteDomainRedirectMiddleware
 
 
 Development
