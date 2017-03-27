@@ -9,9 +9,9 @@ like django.contrib.redirects, on steroids. maybe.
 Implemented:
 
 - simple redirects table, with that bit more flexibility / convenience
-  - limited wildcard matching
-  - move complete trees
-  - decide if you want to keep GET vars
+    - limited wildcard matching
+    - move complete trees
+    - decide if you want to keep GET vars
 - force site domain middleware, that redirects to current site's domain, if not already there
 
 Yet to be done:
