@@ -4,27 +4,23 @@ django painless redirects
 .. image:: https://travis-ci.org/bnzk/django-painless-redirects.svg
     :target: https://travis-ci.org/bnzk/django-painless-redirects
 
-FAIR WARNING: dont take anything for real that is written below the lines just below, as most (or all) of it
-is boilerplate text from https://github.com/bitmazk/django-reusable-app-template (that is great, btw).
+like django.contrib.redirects, on steroids. maybe.
 
-like django.contrib.redirects on steroids. maybe.
+Implemented:
 
-planned (note to self):
+- simple redirects table, with that bit more flexibility / convenience
+    - limited wildcard matching
+    - move complete trees
+    - decide if you want to keep GET vars
+- force site domain middleware, that redirects to current site's domain, if not already there
 
-- simple redirects table, with that bit more flexibility
-- contrib packages with "magic" redirects for django-cms and django-folderless, SEO ftw.
-- contrib package "force_site_domain"
+Yet to be done:
 
-more not to self:
+- APPEND_SLASH handling (when trying to redirect /whatever/was-here.html)
+- contrib packages with "magic" redirects for django-cms, django-filer -> SEO is easy.
 
-- not forget APPEND_SLASH (when trying to redirect /whatever/was-here.html)
-- more?
 
-Development
------------
-there is test app, available with ./manage.py runserver. to run tests: ./manage.py test
-
-Installation
+Installation & Usage
 ------------
 
 To get the latest stable release from PyPi
@@ -32,14 +28,6 @@ To get the latest stable release from PyPi
 .. code-block:: bash
 
     pip install django-painless-redirects
-
-To get the latest commit from GitHub
-
-.. code-block:: bash
-
-    pip install -e git+git://github.com/benzkji/django-painless-redirects.git#egg=painless_redirects
-
-TODO: Describe further installation steps (edit / remove the examples below):
 
 Add ``painless_redirects`` to your ``INSTALLED_APPS``
 
@@ -50,38 +38,30 @@ Add ``painless_redirects`` to your ``INSTALLED_APPS``
         'painless_redirects',
     )
 
-Add the ``painless_redirects`` URLs to your ``urls.py``
-
-.. code-block:: python
-
-    urlpatterns = patterns('',
-        ...
-        url(r'^app-url/', include('painless_redirects.urls')),
-    )
-
-Before your tags/filters are available in your templates, load them by using
-
-.. code-block:: html
-
-	{% load painless_redirects_tags %}
-
-
-Don't forget to migrate your database
+Add the following middlware to MIDDLEWARE_CLASSES (1.10 style middlewares will be supported soon),
+to make basic redirects work.
 
 .. code-block:: bash
 
-    ./manage.py migrate painless_redirects
+    painless_redirects.middleware.ManualRedirectMiddleware
+
+If you want to be redirected to the domain name entered in your current site (django.contrib.sites must be installed),
+also add this middleware:
+
+.. code-block:: bash
+    painless_redirects.middleware.ForceSiteDomainRedirectMiddleware
 
 
-Usage
------
+Development
+------------
 
-TODO: Describe usage or point to docs. Also describe available settings and
-templatetags.
+- there is test app, available with `./manage.py runserver`.
+- to run tests: ./manage.py test
+- to run tests with django 1.8 / 1.9 / 1.10: `tox`
 
 
-Contribute
-----------
+Contributions
+-------------
 
 If you want to contribute to this project, please perform the following steps
 
@@ -89,10 +69,9 @@ If you want to contribute to this project, please perform the following steps
 
     # Fork this repository
     # Clone your fork
-    mkvirtualenv -p python2.7 django-painless-redirects
-    make develop
-
-    git co -b feature_branch master
+    mkvirtualenv django-painless-redirects
+    pip install -r test_requirements.txt
+    git checkout -b feature_branch
     # Implement your feature and tests
     git add . && git commit
     git push -u origin feature_branch

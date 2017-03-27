@@ -1,5 +1,10 @@
 === (ongoing) ===
-- Initial commit
+- todo: move tree, keep getvars, etc
+
+=== (ongoing) ===
+- intitial release 0.1
+- basics there
+
 
 
 # Suggested file syntax:
