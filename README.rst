@@ -69,10 +69,9 @@ If you want to contribute to this project, please perform the following steps
 
     # Fork this repository
     # Clone your fork
-    mkvirtualenv -p python2.7 django-painless-redirects
-    make develop
-
-    git co -b feature_branch master
+    mkvirtualenv django-painless-redirects
+    pip install -r test_requirements.txt
+    git checkout -b feature_branch
     # Implement your feature and tests
     git add . && git commit
     git push -u origin feature_branch
