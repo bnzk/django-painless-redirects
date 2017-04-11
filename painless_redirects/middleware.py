@@ -63,9 +63,10 @@ class ManualRedirectMiddleware(object):
         # TODO: this exception code looks like mess. and not DRY
         # TODO: handle orm.get with multiple objects returned!
         current_site = Site.objects.get_current()
-        current_path = request.path
+        current_path = str(request.path)
         if request.META.get('QUERY_STRING', None):
-            current_path += '?' + request.META.get('QUERY_STRING')
+            current_path = current_path + '?' + request.META.get('QUERY_STRING')
+            print current_path
         redirect = None
         # exact match of path and site. yay.
         redirect = Redirect.objects.filter(

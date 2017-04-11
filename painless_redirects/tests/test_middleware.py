@@ -101,7 +101,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.response.status_code = 404
         self.request.path = obj.old_path
         self.request.META = {}
-        # self.request.META['QUERY_STRING'] = 'special=charséàè)(/&%çç*"næßđð“½'
+        # self.request.META['QUERY_STRING'] = 'special=charséàè)(/&%çç*"næßđð“½&amp;what=the;:_éà£Pè!'
         # self.request.META['QUERY_STRING'] = 'lang=de&s=poste\xc3\x83\xc6\x92\xc3\xa2\xe2\x82\xac\xc5\xa1\xc3\x83\xe2\x80\x9a\xc3\x82\xc2\xa8'
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 301)
