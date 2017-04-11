@@ -1,4 +1,7 @@
 # coding: utf-8
+
+# dont add this, request.path is non unicode in python 2.7
+# or add it, as request.path shoudl be unicode anyway?!
 from __future__ import unicode_literals
 
 from django.contrib.sites.models import Site
@@ -95,17 +98,19 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")
 
-    # TODO: could not yet reproduce this problem with a test!
-    def test_redirect_special_chars_get_var(self):
+    def test_special_chars_in_url(self):
+        """
+        in python 2.7, request.path seems to be ascii!?
+        or not? wt
+        :return:
+        """
         obj = factories.RedirectFactory()
         self.response.status_code = 404
         self.request.path = obj.old_path
-        self.request.META = {}
-        # self.request.META['QUERY_STRING'] = 'special=charséàè)(/&%çç*"næßđð“½&amp;what=the;:_éà£Pè!'
-        # self.request.META['QUERY_STRING'] = 'lang=de&s=poste\xc3\x83\xc6\x92\xc3\xa2\xe2\x82\xac\xc5\xa1\xc3\x83\xe2\x80\x9a\xc3\x82\xc2\xa8'
+        self.request.path = "/2011/11/rédirect/"
         response = self.middleware.process_response(self.request, self.response)
-        self.assertEqual(response.status_code, 301)
-        self.assertEqual(response.url, "/the-new-path/")
+        # only check if it doesnt fail for now.
+        self.assertEqual(response.status_code, 404)
 
     # TODO: this is not what works! one should add http(s)://
     def test_new_site_redirect(self):
