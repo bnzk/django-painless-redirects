@@ -100,14 +100,16 @@ class ManualRedirectMiddlewareTestCase(TestCase):
 
     def test_special_chars_in_url(self):
         """
-        in python 2.7, request.path seems to be ascii!?
-        or not? wt
-        :return:
+        in python 2.7, request.path seems to be ascii, in certain deployment scenarios
+        only reproducable when not importing from __future__ import unicode_literals
+        probably related: https://serverfault.com/questions/359934/unicodeencodeerror-when-uploading-files-in-django-admin
+        only happened on a uwsgi configuration for now.
         """
         obj = factories.RedirectFactory()
         self.response.status_code = 404
         self.request.path = obj.old_path
-        self.request.path = "/2011/11/rédirect/"
+        self.request.path = "/2011/11/réééédirect/"
+        self.request.META['QUERY_STRING'] = "?what=ééé"
         response = self.middleware.process_response(self.request, self.response)
         # only check if it doesnt fail for now.
         self.assertEqual(response.status_code, 404)
