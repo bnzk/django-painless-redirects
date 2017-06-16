@@ -1,5 +1,5 @@
 django painless redirects
-============
+=========================
 
 .. image:: https://travis-ci.org/bnzk/django-painless-redirects.svg
     :target: https://travis-ci.org/bnzk/django-painless-redirects/
@@ -11,7 +11,7 @@ django painless redirects
 like django.contrib.redirects, on steroids. maybe.
 
 Features
-------------
+--------
 
 - simple redirects table, with that bit more flexibility / convenience
     - wildcard matching
@@ -20,6 +20,8 @@ Features
 - force site domain middleware, that redirects to current site's domain, if not already there
 
 Yet to be done:
+###############
+
 - decide if you want to keep GET vars
 - move complete trees
 - APPEND_SLASH handling (when trying to redirect /whatever/was-here.html)
@@ -27,7 +29,7 @@ Yet to be done:
 
 
 Installation & Usage
-------------
+--------------------
 
 To get the latest stable release from PyPi
 
@@ -60,7 +62,7 @@ also add this middleware:
 
 
 Development
-------------
+-----------
 
 - there is test app, available with `./manage.py runserver`.
 - to run tests: ./manage.py test
