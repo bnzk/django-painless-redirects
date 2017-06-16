@@ -1,6 +1,9 @@
 === (ongoing) ===
 - todo: move tree, keep getvars, etc
 
+=== 0.1.2 ===
+- last try with pypi's readme
+
 === 0.1.1 ===
 - ui changes in admin change view
 - pypi mess and readme updated

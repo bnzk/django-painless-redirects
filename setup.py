@@ -57,7 +57,7 @@ setup(
     keywords='django, redirect',
     author='Ben Stähli',
     author_email='bnzk@bnzk.ch',
-    url="https://github.com/benzkji/django-painless-redirects",
+    url="https://github.com/bnzk/django-painless-redirects",
     packages=find_packages(),
     include_package_data=True,
     install_requires=install_requires,
