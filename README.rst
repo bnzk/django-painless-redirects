@@ -10,19 +10,20 @@ django painless redirects
 
 like django.contrib.redirects, on steroids. maybe.
 
-Features:
+Features
 ------------
 
 - simple redirects table, with that bit more flexibility / convenience
-    - limited wildcard matching
-    - move complete trees
-    - decide if you want to keep GET vars
+    - wildcard matching
+    - explicit limit to site/domain
+    - explicit redirect to site
 - force site domain middleware, that redirects to current site's domain, if not already there
 
 Yet to be done:
-
+- decide if you want to keep GET vars
+- move complete trees
 - APPEND_SLASH handling (when trying to redirect /whatever/was-here.html)
-- contrib packages with "magic" redirects for django-cms, django-filer -> SEO is easy.
+- contrib packages with "magic" redirects for django-cms, django-filer -> SEO becoming easy.
 
 
 Installation & Usage
