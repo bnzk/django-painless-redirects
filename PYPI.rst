@@ -8,4 +8,4 @@ django painless redirects
 
 like django.contrib.redirects, on steroids. maybe.
 
-`Development and Docs on github.com/bnzk/django-painless-redirects<https://github.com/bnzk/django-painless-redirects/>`_
+`Development and Docs on github.com/bnzk/django-painless-redirects <https://github.com/bnzk/django-painless-redirects/>`_
