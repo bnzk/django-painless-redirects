@@ -10,9 +10,8 @@ django painless redirects
 
 like django.contrib.redirects, on steroids. maybe.
 
-Development and Docs on `<https://github.com/bnzk/django-painless-redirects/>`_
-
-Implemented:
+Features:
+------------
 
 - simple redirects table, with that bit more flexibility / convenience
     - limited wildcard matching
