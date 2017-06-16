@@ -20,7 +20,6 @@ Features
 - force site domain middleware, that redirects to current site's domain, if not already there
 
 Yet to be done:
-###############
 
 - decide if you want to keep GET vars
 - move complete trees
