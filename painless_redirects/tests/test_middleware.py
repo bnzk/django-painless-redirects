@@ -1,4 +1,9 @@
-"""Tests for the models of the painless_redirects app."""
+# coding: utf-8
+
+# dont add this, request.path is non unicode in python 2.7
+# or add it, as request.path shoudl be unicode anyway?!
+# from __future__ import unicode_literals
+
 from django.contrib.sites.models import Site
 from django.http import QueryDict
 from django.test import TestCase
@@ -92,6 +97,22 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")
+
+    def test_special_chars_in_url(self):
+        """
+        in python 2.7, request.path seems to be ascii, in certain deployment scenarios
+        only reproducable when not importing from __future__ import unicode_literals
+        probably related: https://serverfault.com/questions/359934/unicodeencodeerror-when-uploading-files-in-django-admin
+        only happened on a uwsgi configuration for now.
+        """
+        obj = factories.RedirectFactory()
+        self.response.status_code = 404
+        self.request.path = obj.old_path
+        self.request.path = "/2011/11/réééédirect/"
+        self.request.META['QUERY_STRING'] = "?what=ééé"
+        response = self.middleware.process_response(self.request, self.response)
+        # only check if it doesnt fail for now.
+        self.assertEqual(response.status_code, 404)
 
     # TODO: this is not what works! one should add http(s)://
     def test_new_site_redirect(self):

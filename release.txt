@@ -1,13 +1,14 @@
 
+# dont change any files besides CHANGELOG.txt and __init__.py during procedure.
 
-git flow release start 0.xxx
+git flow release start xxxx
 version bump in painless_redirects/__init__.py
-CHANGELOG!
-git flow release finish 0.xxx
+last chance to update CHANGELOG!
+git commit -am'version bump / changelog'
+git flow release finish xxxx
 git push --all; git push --tags
-python setup.py sdist
-python setup.py bdist_wheel --universal
-python setup.py register -r pypitest
-twine upload dist/* -r pypitest
-python setup.py register -r pypi
-twine upload dist/*
+# upstream: depends
+git push upstream --all; git push upstream --tags
+python setup.py sdist && python setup.py bdist_wheel --universal
+python setup.py register -r pypitest && twine upload dist/* -r pypitest
+python setup.py register -r pypi && twine upload dist/* -r pypi

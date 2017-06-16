@@ -51,7 +51,7 @@ setup(
     name="django-painless-redirects",
     version=app.__version__,
     description=read('DESCRIPTION'),
-    long_description=read('README.rst'),
+    long_description=read('PYPI.rst'),
     license='The MIT License',
     platforms=['OS Independent'],
     keywords='django, redirect',

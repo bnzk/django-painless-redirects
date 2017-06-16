@@ -1,6 +1,9 @@
 # coding: utf-8
+from __future__ import unicode_literals
+
 from django.conf import settings
 from django import http
+from django.utils.encoding import force_text
 from django.utils.http import urlquote
 from django.contrib.sites.models import Site
 
@@ -59,11 +62,11 @@ class ManualRedirectMiddleware(object):
             # No need to check for a redirect for non-404 responses.
             return response
         # TODO: this exception code looks like mess. and not DRY
-        # TODO: handle get with multiple objects returned!
+        # TODO: handle orm.get with multiple objects returned!
         current_site = Site.objects.get_current()
-        current_path = request.path
+        current_path = force_text(request.path)
         if request.META.get('QUERY_STRING', None):
-            current_path += "?" + request.META.get('QUERY_STRING')
+            current_path += '?' + force_text(request.META.get('QUERY_STRING'))
         redirect = None
         # exact match of path and site. yay.
         redirect = Redirect.objects.filter(
@@ -93,7 +96,7 @@ class ManualRedirectMiddleware(object):
                 if redirect.count():
                     break
                 remaining_path, right_side = remaining_path.rsplit("/", 1)
-                right_path = "%s/%s" % (right_side, right_path)
+                right_path = '%s/%s' % (right_side, right_path)
         if redirect.count():
             to_redirect = redirect[0].redirect_value()
             # TODO: if domain was set, add schema (https/http)

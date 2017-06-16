@@ -3,6 +3,8 @@ language: python
 python:
   - "2.7"
   - "3.4"
+  - "3.5"
+  - "3.6"
 
 env:
   matrix:
@@ -10,6 +12,7 @@ env:
     - DJANGO=1.8.12 DB=sqlite
     - DJANGO=1.9.5 DB=sqlite
     - DJANGO=1.10 DB=sqlite
+    - DJANGO=1.11 DB=sqlite
 
 # command to install dependencies
 install:

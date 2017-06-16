@@ -1,7 +1,11 @@
 === (ongoing) ===
 - todo: move tree, keep getvars, etc
 
-=== (ongoing) ===
+=== 0.1.1 ===
+- ui changes in admin change view
+- pypi mess and readme updated
+
+=== 0.1 ===
 - intitial release 0.1
 - basics there
 
