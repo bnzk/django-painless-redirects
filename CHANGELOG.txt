@@ -1,6 +1,9 @@
 === (ongoing) ===
 - todo: move tree, keep getvars, etc
 
+=== 0.1.3 ===
+- added missing migration
+
 === 0.1.2 ===
 - last try with pypi's readme
 
