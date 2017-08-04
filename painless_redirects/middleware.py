@@ -48,10 +48,7 @@ class ManualRedirectMiddleware(object):
         if not redirect.count():
             redirect = Redirect.objects.filter(domain=host)
         if redirect.count():
-            new_uri = '%s://%s%s' % (
-                request.is_secure() and 'https' or 'http',
-                redirect.redirect_value()
-            )
+            new_uri = redirect[0].redirect_value(request.scheme)
             return http.HttpResponsePermanentRedirect(new_uri)
 
     def process_response(self, request, response):
@@ -61,8 +58,8 @@ class ManualRedirectMiddleware(object):
         if response.status_code != 404:
             # No need to check for a redirect for non-404 responses.
             return response
-        # TODO: this exception code looks like mess. and not DRY
-        # TODO: handle orm.get with multiple objects returned!
+        # TODO: this code looks like debt. not DRY at all
+        # TODO: force_text ok like this?
         current_site = Site.objects.get_current()
         current_path = force_text(request.path)
         if request.META.get('QUERY_STRING', None):
@@ -98,7 +95,6 @@ class ManualRedirectMiddleware(object):
                 remaining_path, right_side = remaining_path.rsplit("/", 1)
                 right_path = '%s/%s' % (right_side, right_path)
         if redirect.count():
-            to_redirect = redirect[0].redirect_value()
-            # TODO: if domain was set, add schema (https/http)
-            return http.HttpResponsePermanentRedirect(to_redirect)
+            new_uri = redirect[0].redirect_value(request.scheme)
+            return http.HttpResponsePermanentRedirect(new_uri)
         return response

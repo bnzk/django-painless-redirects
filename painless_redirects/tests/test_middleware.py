@@ -114,17 +114,17 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         # only check if it doesnt fail for now.
         self.assertEqual(response.status_code, 404)
 
-    # TODO: this is not what works! one should add http(s)://
     def test_new_site_redirect(self):
         obj = factories.RedirectFactory()
         obj.new_site = factories.SiteFactory()
         obj.save()
         self.response.status_code = 404
+        self.request.scheme = "https"
         self.request.path = "/the-old-path/"
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 301)
         self.assertEqual(
-            response.url, "%s%s" % (obj.new_site.domain, obj.new_path))
+            response.url, "https://%s%s" % (obj.new_site.domain, obj.new_path))
 
     def test_wildcard_redirect(self):
         obj = factories.RedirectFactory()
