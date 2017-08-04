@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-04 12:27+0200\n"
+"POT-Creation-Date: 2017-08-04 12:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Ben Stähli <bnzk@bnzk.ch>, 2017\n"
 "Language-Team: German (https://www.transifex.com/bnzk/teams/73171/de/)\n"
@@ -19,18 +19,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: admin.py:14
-#, fuzzy
-#| msgid "From path"
 msgid "From"
-msgstr "Umleitungspfad "
+msgstr "Von "
 
 #: admin.py:17
 msgid "To"
-msgstr "Zielpfad"
+msgstr "Ziel"
 
 #: models.py:19
 msgid "From path"
-msgstr "Umleitungspfad "
+msgstr "Von"
 
 #: models.py:20
 msgid ""
@@ -56,15 +54,13 @@ msgid "Optional, exlicitly limit to specific domain."
 msgstr "Optional. Redirect nur gültig für diese Domain."
 
 #: models.py:28
-#, fuzzy
-#| msgid "From path"
 msgid "To path"
-msgstr "Umleitungspfad "
+msgstr "Ziel"
 
 #: models.py:29
 msgid "Absolute path, or full url (with http://.../)."
 msgstr ""
-"Absoluter Pfad, oder komplette URI (http://www.zieldomain.com/zielpfad)"
+"Absoluter Pfad (/xyz/), oder komplette URI (http://www.zieldomain.com/ziel)"
 
 #: models.py:32
 msgid "Optional, automatically insert correct domain name of this site."
