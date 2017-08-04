@@ -12,6 +12,6 @@ class RedirectModelTestCase(TestCase):
 
     def test_redirect_value(self):
         obj = factories.RedirectFactory()
-        self.assertEqual(obj.redirect_value(), "/the-new-path/")
+        self.assertEqual(obj.redirect_value('http'), "/the-new-path/")
         obj.new_site = factories.SiteFactory()
-        self.assertEqual(obj.redirect_value(), "%s/the-new-path/" % obj.new_site.domain)
+        self.assertEqual(obj.redirect_value('https'), "https://%s/the-new-path/" % obj.new_site.domain)
