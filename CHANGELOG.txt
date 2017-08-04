@@ -1,6 +1,9 @@
 === (ongoing) ===
 - todo: move tree, keep getvars, etc
 
+=== 0.1.5 ===
+- fixing broken admin regression from 0.1.4
+
 === 0.1.4 ===
 - bug when specifying the "to" site
 - translations
