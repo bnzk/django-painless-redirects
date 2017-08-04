@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-24 14:36+0100\n"
+"POT-Creation-Date: 2017-08-04 12:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,40 +17,48 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: admin.py:14
+msgid "From"
+msgstr ""
+
+#: admin.py:17
+msgid "To"
+msgstr ""
+
 #: models.py:19
-msgid "Optional, limit redirect to this site."
-msgstr ""
-
-#: models.py:21
-msgid "Optional, exlicitly limit to specific domain."
-msgstr ""
-
-#: models.py:22
 msgid "From path"
 msgstr ""
 
-#: models.py:23
+#: models.py:20
 msgid ""
 "This should be an absolute path, excluding the domain name. Example: '/"
 "events/search/'."
 msgstr ""
 
-#: models.py:24
+#: models.py:21
 msgid "Wildcard mode"
 msgstr ""
 
-#: models.py:25
+#: models.py:22
 msgid "Add wildcard (*) to from path"
 msgstr ""
 
-#: models.py:26
-msgid "To"
+#: models.py:25
+msgid "Optional, limit redirect to this site."
 msgstr ""
 
 #: models.py:27
+msgid "Optional, exlicitly limit to specific domain."
+msgstr ""
+
+#: models.py:28
+msgid "To path"
+msgstr ""
+
+#: models.py:29
 msgid "Absolute path, or full url (with http://.../)."
 msgstr ""
 
-#: models.py:30
+#: models.py:32
 msgid "Optional, automatically insert correct domain name of this site."
 msgstr ""
