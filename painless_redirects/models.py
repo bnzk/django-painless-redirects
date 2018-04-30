@@ -25,7 +25,7 @@ class Redirect(models.Model):
     site = models.ForeignKey(Site, null=True, blank=True,
         related_name="redirect_old_site",
         help_text=_('Optional, limit redirect to this site.'))
-    domain = models.CharField(max_length=64, blank=True,
+    domain = models.CharField(max_length=64, blank=True, default='',
         help_text=_('Optional, exlicitly limit to specific domain.'))
     new_path = models.CharField(_(u'To path'), max_length=255,
         help_text=_('Absolute path, or full url (with http://.../).'))

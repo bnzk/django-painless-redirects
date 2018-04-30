@@ -62,6 +62,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.middleware = ManualRedirectMiddleware()
         self.request = Mock()
         self.request.META = {}
+        self.request.get_host = lambda : 'host.com'
         self.response = Mock()
 
     def test_no_404(self):
@@ -158,3 +159,33 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")
+
+    def test_from_custom_domain(self):
+        obj = factories.RedirectFactory()
+        obj.domain = 'custom.com'
+        obj.old_path = '/'
+        obj.new_path = 'http://another.com/'
+        obj.save()
+        self.request.path = obj.old_path
+        self.request.get_host = lambda : 'custom.com'
+        self.response.status_code = 200
+        response = self.middleware.process_request(self.request, )
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, "http://another.com/")
+
+    def test_from_custom_domain_false_positive(self):
+        obj = factories.RedirectFactory()
+        obj.domain = 'custom.com'
+        obj.old_path = '/'
+        obj.new_path = 'http://another.com/'
+        obj.save()
+        self.request.path = obj.old_path
+        # check for false positives!
+        self.request.get_host = lambda : 'none-or-what.com'
+        self.response.status_code = 200
+        response = self.middleware.process_request(self.request)
+        self.assertEqual(response, None)
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertNotEqual(response.status_code, 301)
+        # self.assertEqual(response.url, "http://another.com/")
+

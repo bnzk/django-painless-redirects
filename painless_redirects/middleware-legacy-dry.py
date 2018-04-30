@@ -32,20 +32,17 @@ class ForceSiteDomainRedirectMiddleware(object):
 
 
 class ManualRedirectMiddleware(object):
-
     def process_request(self, request):
         """
         if a domain redirect is found...redirect
         mostly used by "domain collectors"
-        -
-        in the future, this shoudl only be enforced for redirects with a new field
-        "force for non 404s" set to True. (domain field enforces this magically, for now)
         """
         host = request.get_host()
         current_site = Site.objects.get_current()
         if host == current_site.domain:
             return None
-        # match?
+        redirect = None
+        # better match?
         redirect = Redirect.objects.filter(domain=host, old_path=request.path)
         # only domain. redirect anyway!
         if not redirect.count():
@@ -61,26 +58,48 @@ class ManualRedirectMiddleware(object):
         if response.status_code != 404:
             # No need to check for a redirect for non-404 responses.
             return response
-        host = request.get_host()
+        # TODO: this code looks like debt. not DRY at all
+        # TODO: force_text ok like this?
         current_site = Site.objects.get_current()
         current_path = force_text(request.path)
         if request.META.get('QUERY_STRING', None):
             current_path += '?' + force_text(request.META.get('QUERY_STRING'))
         redirect = None
-        # path and domain!
-        redirect = self._check_for_redirect(current_path, **{'domain': host, })
-        # exact match of path and site.
+        # exact match of path and site. yay.
+        redirect = Redirect.objects.filter(
+            old_path=current_path, site=current_site)
+        # wildcard match, with matching site
         if not redirect.count():
-            redirect = self._check_for_redirect(current_path, **{'site': current_site, 'domain': '', })
+            remaining_path, rubbish = current_path.rsplit("/", 1)
+            right_path = ""
+            while remaining_path:
+                redirect = Redirect.objects.filter(
+                    old_path=remaining_path + "/", wildcard_match=True,
+                    site=current_site)
+                if redirect.count():
+                    break
+                remaining_path, right_side = remaining_path.rsplit("/", 1)
+                right_path = "%s/%s" % (right_side, right_path)
         # exact path match
         if not redirect.count():
-            redirect = self._check_for_redirect(current_path, **{'site': None, 'domain': '', })
+            redirect = Redirect.objects.filter(old_path=current_path, site=None)
+        # wildcard match
+        if not redirect.count():
+            remaining_path, rubbish = current_path.rsplit("/", 1)
+            right_path = ""
+            while remaining_path:
+                redirect = Redirect.objects.filter(
+                    old_path=remaining_path + "/", wildcard_match=True, site=None)
+                if redirect.count():
+                    break
+                remaining_path, right_side = remaining_path.rsplit("/", 1)
+                right_path = '%s/%s' % (right_side, right_path)
         if redirect.count():
             new_uri = redirect[0].redirect_value(request.scheme)
             return http.HttpResponsePermanentRedirect(new_uri)
         return response
 
-    def _check_for_redirect(self, path, **kwargs):
+    def _check_for_redirect(self, path, field, **kwargs):
         redirect = Redirect.objects.filter(old_path=path, **kwargs)
         # wildcard match
         if not redirect.count():
