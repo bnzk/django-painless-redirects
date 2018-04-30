@@ -22,16 +22,26 @@ class Redirect(models.Model):
         help_text=_("This should be an absolute path, excluding the domain name. Example: '/events/search/'."))
     wildcard_match = models.BooleanField(_(u'Wildcard mode'), default=False,
         help_text=_('Add wildcard (*) to from path'))
-    site = models.ForeignKey(Site, null=True, blank=True,
+    site = models.ForeignKey(
+        Site,
+        null=True,
+        on_delete=models.CASCADE,
+        blank=True,
         related_name="redirect_old_site",
-        help_text=_('Optional, limit redirect to this site.'))
+        help_text=_('Optional, limit redirect to this site.'),
+    )
     domain = models.CharField(max_length=64, blank=True, default='',
         help_text=_('Optional, exlicitly limit to specific domain.'))
     new_path = models.CharField(_(u'To path'), max_length=255,
         help_text=_('Absolute path, or full url (with http://.../).'))
-    new_site = models.ForeignKey(Site, null=True, blank=True,
+    new_site = models.ForeignKey(
+        Site,
+        null=True,
+        on_delete=models.CASCADE,
+        blank=True,
         related_name="redirect_new_site",
-        help_text=_('Optional, automatically insert correct domain name of this site.'))
+        help_text=_('Optional, automatically insert correct domain name of this site.'),
+    )
     # redirect_type = models.SmallIntegerField(
     #    choices=REDIRECT_TYPE_CHOICES, default=301,
     #    help_text=_(u"You know what you do, right? (If not: 301)"))
