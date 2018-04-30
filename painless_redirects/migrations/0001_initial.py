@@ -19,8 +19,8 @@ class Migration(migrations.Migration):
                 ('old_path', models.CharField(help_text="This should be an absolute path, excluding the domain name. Example: '/events/search/'.", max_length=255, verbose_name='From path')),
                 ('wildcard_match', models.BooleanField(default=False, help_text='Add wildcard (*) to from path', verbose_name='Wildcard mode')),
                 ('new_path', models.CharField(help_text='Absolute path, or full url (with http://.../).', max_length=255, verbose_name='To')),
-                ('new_site', models.ForeignKey(related_name='redirect_new_site', blank=True, to='sites.Site', help_text='Optional, automatically insert correct domain name of this site.', null=True)),
-                ('site', models.ForeignKey(related_name='redirect_old_site', blank=True, to='sites.Site', help_text='Optional, limit redirect to this site.', null=True)),
+                ('new_site', models.ForeignKey(on_delete=models.CASCADE, related_name='redirect_new_site', blank=True, to='sites.Site', help_text='Optional, automatically insert correct domain name of this site.', null=True)),
+                ('site', models.ForeignKey(on_delete=models.CASCADE, related_name='redirect_old_site', blank=True, to='sites.Site', help_text='Optional, limit redirect to this site.', null=True)),
             ],
             options={
                 'ordering': ('old_path',),
