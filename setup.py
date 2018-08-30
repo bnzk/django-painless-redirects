@@ -32,10 +32,6 @@ from setuptools import setup, find_packages
 import painless_redirects as app
 
 
-dev_requires = [
-    'flake8',
-]
-
 install_requires = [
     'django',
 ]
@@ -46,6 +42,7 @@ def read(fname):
         return open(os.path.join(os.path.dirname(__file__), fname)).read()
     except IOError:
         return ''
+
 
 setup(
     name="django-painless-redirects",
@@ -61,7 +58,4 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=install_requires,
-    extras_require={
-        'dev': dev_requires,
-    },
 )

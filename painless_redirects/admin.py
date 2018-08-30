@@ -12,10 +12,10 @@ class RedirectAdmin(admin.ModelAdmin):
     list_filter = ['site', 'domain', 'new_site', 'wildcard_match', ]
     fieldsets = (
         (_('From'), {
-            'fields': ('old_path', 'wildcard_match', 'site', 'domain', ),
+            'fields': (('old_path', 'wildcard_match', ), 'site', 'domain', ),
         }),
         (_('To'), {
-            'fields': ('new_path', 'new_site')
+            'fields': ('new_path', ('keep_tree', 'keep_querystring', ), 'new_site', 'permanent', )
         }),
     )
 

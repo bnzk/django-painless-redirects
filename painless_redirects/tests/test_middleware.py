@@ -62,6 +62,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.middleware = ManualRedirectMiddleware()
         self.request = Mock()
         self.request.META = {}
+        self.request.get_host = lambda : 'host.com'
         self.response = Mock()
 
     def test_no_404(self):
@@ -94,6 +95,39 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         obj = factories.RedirectFactory()
         self.response.status_code = 404
         self.request.path = obj.old_path
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, "/the-new-path/")
+
+    def test_simple_redirect_302(self):
+        obj = factories.RedirectFactory()
+        obj.permanent = False
+        obj.save()
+        self.response.status_code = 404
+        self.request.path = obj.old_path
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/the-new-path/")
+
+    def test_simple_redirect_keep_querystring(self):
+        obj = factories.RedirectFactory()
+        self.response.status_code = 404
+        self.request.path = obj.old_path
+        self.request.META['QUERY_STRING'] = 'a=b'
+        obj.keep_querystring = True
+        obj.old_path += "?a=b"
+        obj.save()
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, "/the-new-path/?a=b")
+
+    def test_simple_redirect_drop_querystring(self):
+        obj = factories.RedirectFactory()
+        self.response.status_code = 404
+        self.request.path = obj.old_path
+        self.request.META['QUERY_STRING'] = 'a=xy'
+        obj.old_path += "?a=xy"
+        obj.save()
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")
@@ -137,6 +171,18 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")
 
+    def test_wildcard_redirect_keep_tree(self):
+        obj = factories.RedirectFactory()
+        obj.old_path = "/the-wildcard/yes/"
+        obj.wildcard_match = True
+        obj.keep_tree = True
+        obj.save()
+        self.response.status_code = 404
+        self.request.path = "%sthe/right/part/" % obj.old_path
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, "/the-new-path/the/right/part/")
+
     def test_wildcard_redirect_with_site(self):
         obj = factories.RedirectFactory()
         obj.site = Site.objects.get_current()
@@ -158,3 +204,33 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")
+
+    def test_from_custom_domain(self):
+        obj = factories.RedirectFactory()
+        obj.domain = 'custom.com'
+        obj.old_path = '/'
+        obj.new_path = 'http://another.com/'
+        obj.save()
+        self.request.path = obj.old_path
+        self.request.get_host = lambda : 'custom.com'
+        self.response.status_code = 200
+        response = self.middleware.process_request(self.request, )
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, "http://another.com/")
+
+    def test_from_custom_domain_false_positive(self):
+        obj = factories.RedirectFactory()
+        obj.domain = 'custom.com'
+        obj.old_path = '/'
+        obj.new_path = 'http://another.com/'
+        obj.save()
+        self.request.path = obj.old_path
+        # check for false positives!
+        self.request.get_host = lambda : 'none-or-what.com'
+        self.response.status_code = 200
+        response = self.middleware.process_request(self.request)
+        self.assertEqual(response, None)
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertNotEqual(response.status_code, 301)
+        # self.assertEqual(response.url, "http://another.com/")
+
