@@ -64,28 +64,36 @@ class ManualRedirectMiddleware(object):
         host = request.get_host()
         current_site = Site.objects.get_current()
         current_path = force_text(request.path)
-        if request.META.get('QUERY_STRING', None):
-            current_path += '?' + force_text(request.META.get('QUERY_STRING'))
-        redirect = None
+        querystring = request.META.get('QUERY_STRING', None)
+        if querystring:
+            current_path += '?' + force_text(querystring)
         # path and domain!
-        redirect = self._check_for_redirect(current_path, **{'domain': host, })
+        redirect, right_path = self._check_for_redirect(current_path, **{'domain': host, })
         # exact match of path and site.
         if not redirect.count():
-            redirect = self._check_for_redirect(current_path, **{'site': current_site, 'domain': '', })
+            redirect, right_path = self._check_for_redirect(current_path, **{'site': current_site, 'domain': '', })
         # exact path match
         if not redirect.count():
-            redirect = self._check_for_redirect(current_path, **{'site': None, 'domain': '', })
+            redirect, right_path = self._check_for_redirect(current_path, **{'site': None, 'domain': '', })
         if redirect.count():
-            new_uri = redirect[0].redirect_value(request.scheme)
-            return http.HttpResponsePermanentRedirect(new_uri)
+            new_uri = redirect[0].redirect_value(
+                request.scheme,
+                right_path=right_path,
+                querystring=querystring,
+            )
+            if redirect[0].permanent:
+                return http.HttpResponsePermanentRedirect(new_uri)
+            else:
+                return http.HttpResponseRedirect(new_uri)
+
         return response
 
     def _check_for_redirect(self, path, **kwargs):
         redirect = Redirect.objects.filter(old_path=path, **kwargs)
+        right_path = ""
         # wildcard match
         if not redirect.count():
             remaining_path, rubbish = path.rsplit("/", 1)
-            right_path = ""
             while remaining_path:
                 redirect = Redirect.objects.filter(
                     old_path=remaining_path + "/", wildcard_match=True, **kwargs)
@@ -93,4 +101,7 @@ class ManualRedirectMiddleware(object):
                     break
                 remaining_path, right_side = remaining_path.rsplit("/", 1)
                 right_path = '%s/%s' % (right_side, right_path)
-        return redirect
+            # print("---")
+            # print(remaining_path)
+            # print(right_path)
+        return redirect, right_path

@@ -99,6 +99,39 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")
 
+    def test_simple_redirect_302(self):
+        obj = factories.RedirectFactory()
+        obj.permanent = False
+        obj.save()
+        self.response.status_code = 404
+        self.request.path = obj.old_path
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/the-new-path/")
+
+    def test_simple_redirect_keep_querystring(self):
+        obj = factories.RedirectFactory()
+        self.response.status_code = 404
+        self.request.path = obj.old_path
+        self.request.META['QUERY_STRING'] = 'a=b'
+        obj.keep_querystring = True
+        obj.old_path += "?a=b"
+        obj.save()
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, "/the-new-path/?a=b")
+
+    def test_simple_redirect_drop_querystring(self):
+        obj = factories.RedirectFactory()
+        self.response.status_code = 404
+        self.request.path = obj.old_path
+        self.request.META['QUERY_STRING'] = 'a=xy'
+        obj.old_path += "?a=xy"
+        obj.save()
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, "/the-new-path/")
+
     def test_special_chars_in_url(self):
         """
         in python 2.7, request.path seems to be ascii, in certain deployment scenarios
@@ -137,6 +170,18 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")
+
+    def test_wildcard_redirect_keep_tree(self):
+        obj = factories.RedirectFactory()
+        obj.old_path = "/the-wildcard/yes/"
+        obj.wildcard_match = True
+        obj.keep_tree = True
+        obj.save()
+        self.response.status_code = 404
+        self.request.path = "%sthe/right/part/" % obj.old_path
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, "/the-new-path/the/right/part/")
 
     def test_wildcard_redirect_with_site(self):
         obj = factories.RedirectFactory()
