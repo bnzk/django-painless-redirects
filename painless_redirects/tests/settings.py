@@ -79,7 +79,8 @@ INTERNAL_APPS = [
     'painless_redirects.tests.test_app',
 ]
 
-MIDDLEWARE_CLASSES = [
+# MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

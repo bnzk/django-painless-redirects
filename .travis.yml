@@ -14,12 +14,15 @@ env:
     - DJANGO=1.10 DB=sqlite
     - DJANGO=1.11 DB=sqlite
     - DJANGO=2.0 DB=sqlite
+    - DJANGO=2.1 DB=sqlite
 
 matrix:
   allow-failures:
   exclude:
     - python: '2.7'
       env: DJANGO=2.0 DB=sqlite
+    - python: '2.7'
+      env: DJANGO=2.1 DB=sqlite
 
 # command to install dependencies
 install:

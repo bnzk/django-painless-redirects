@@ -15,6 +15,23 @@ class ForceSiteDomainRedirectMiddleware(object):
     redirect to the main domain, if not yet there.
     do nothing if settings.DEBUG
     """
+
+    def __init__(self, get_response=None):
+        if get_response:
+            self.get_response = get_response
+        # One-time configuration and initialization.
+
+    def __call__(self, request):
+        # Code to be executed for each request before
+        # the view (and later middleware) are called.
+        a_possible_redirect = self.process_request(request)
+        if a_possible_redirect:
+            return a_possible_redirect
+        response = self.get_response(request)
+        # Code to be executed for each request/response after
+        # the view is called.
+        return response
+
     def process_request(self, request):
         if settings.DEBUG:
             return None
@@ -32,6 +49,22 @@ class ForceSiteDomainRedirectMiddleware(object):
 
 
 class ManualRedirectMiddleware(object):
+
+    def __init__(self, get_response=None):
+        if get_response:
+            self.get_response = get_response
+        # One-time configuration and initialization.
+
+    def __call__(self, request):
+        # Code to be executed for each request before
+        # the view (and later middleware) are called.
+        a_possible_redirect = self.process_request(request)
+        if a_possible_redirect:
+            return a_possible_redirect
+        response = self.get_response(request)
+        # Code to be executed for each request/response after
+        # the view is called.
+        return self.process_response(request, response)
 
     def process_request(self, request):
         """
@@ -85,7 +118,6 @@ class ManualRedirectMiddleware(object):
                 return http.HttpResponsePermanentRedirect(new_uri)
             else:
                 return http.HttpResponseRedirect(new_uri)
-
         return response
 
     def _check_for_redirect(self, path, **kwargs):
