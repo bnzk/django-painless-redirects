@@ -1,8 +1,8 @@
 === (ongoing) ===
-- log 404s?
+- log 404s
 - contrib packages that add redirects automagically
 
-=== 0.2.0 (2018-08-30) ===
+=== 0.2 (2018-08-30) ===
 - new feature: keep treee
 - new feature: keep getvars
 - new feature: 301 OR 302 redirects

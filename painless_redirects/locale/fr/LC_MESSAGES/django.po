@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-30 10:32+0200\n"
+"POT-Creation-Date: 2018-08-30 10:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: French (https://www.transifex.com/bnzk/teams/73171/fr/)\n"
 "Language: fr\n"
@@ -19,68 +19,68 @@ msgstr ""
 
 #: admin.py:14
 msgid "From"
-msgstr ""
+msgstr "De"
 
 #: admin.py:17
 msgid "To"
-msgstr ""
+msgstr "À"
 
 #: models.py:23
 msgid "Permanent redirect (301)"
-msgstr ""
+msgstr "Redirection permanente"
 
 #: models.py:24
 msgid "For temporary fixes, uncheck to use a status code of 302"
-msgstr ""
+msgstr "Pour des redirections temporaires, uncheck!"
 
 #: models.py:26
 msgid "From path"
-msgstr ""
+msgstr "De URL"
 
 #: models.py:27
 msgid "Absolute path, excluding the domain name. Example: '/events/search/'"
-msgstr ""
+msgstr "Chemin absolue, sans nom de domaine (/events/no-more/)"
 
 #: models.py:30
 msgid "Wildcard match"
-msgstr ""
+msgstr "Rediriger sous pages"
 
 #: models.py:31
 msgid "Add wildcard (/from/path/*)"
-msgstr ""
+msgstr "Rediriger toutes (/de/url/*) les sous pages"
 
 #: models.py:45
 msgid "Optional, limit redirect to this site"
-msgstr ""
+msgstr "Optional, limiter redirection pour ce site"
 
 #: models.py:48
 msgid "Optional, exlicitly limit to specific domain"
-msgstr ""
+msgstr "Optional, limiter redirection pour cette domaine"
 
 #: models.py:49
 msgid "To path"
-msgstr ""
+msgstr "À URL"
 
 #: models.py:50
 msgid "Absolute path, or full url (with http://.../)"
-msgstr ""
+msgstr "Chemin absolue, ou URL complete (https://www.xy.com/nouveau)"
 
 #: models.py:53
 msgid "Keep tree"
-msgstr ""
+msgstr "Garder sous pages"
 
 #: models.py:54
 msgid "Only applies when wildcard matching enabled"
-msgstr ""
+msgstr "Seulement quand les sous pages sont rediriger"
 
 #: models.py:58
 msgid "Keep querystring"
-msgstr ""
+msgstr "Garder querystring"
 
 #: models.py:59
 msgid "Re-applies GET querystring, if any (?page=4&search=banana)"
-msgstr ""
+msgstr "Garder GET querystring (?page=28&filter=souris)"
 
 #: models.py:67
 msgid "Optional, automatically insert correct domain name of this site"
-msgstr ""
+msgstr "Optional, inserer nom de domaine correcte, automatiquement"
