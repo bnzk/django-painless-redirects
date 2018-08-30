@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-04 12:30+0200\n"
+"POT-Creation-Date: 2018-08-30 10:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,40 +25,62 @@ msgstr ""
 msgid "To"
 msgstr ""
 
-#: models.py:19
+#: models.py:23
+msgid "Permanent redirect (301)"
+msgstr ""
+
+#: models.py:24
+msgid "For temporary fixes, uncheck to use a status code of 302"
+msgstr ""
+
+#: models.py:26
 msgid "From path"
 msgstr ""
 
-#: models.py:20
-msgid ""
-"This should be an absolute path, excluding the domain name. Example: '/"
-"events/search/'."
-msgstr ""
-
-#: models.py:21
-msgid "Wildcard mode"
-msgstr ""
-
-#: models.py:22
-msgid "Add wildcard (*) to from path"
-msgstr ""
-
-#: models.py:25
-msgid "Optional, limit redirect to this site."
-msgstr ""
-
 #: models.py:27
-msgid "Optional, exlicitly limit to specific domain."
+msgid "Absolute path, excluding the domain name. Example: '/events/search/'"
 msgstr ""
 
-#: models.py:28
+#: models.py:30
+msgid "Wildcard match"
+msgstr ""
+
+#: models.py:31
+msgid "Add wildcard (/from/path/*)"
+msgstr ""
+
+#: models.py:45
+msgid "Optional, limit redirect to this site"
+msgstr ""
+
+#: models.py:48
+msgid "Optional, exlicitly limit to specific domain"
+msgstr ""
+
+#: models.py:49
 msgid "To path"
 msgstr ""
 
-#: models.py:29
-msgid "Absolute path, or full url (with http://.../)."
+#: models.py:50
+msgid "Absolute path, or full url (with http://.../)"
 msgstr ""
 
-#: models.py:32
-msgid "Optional, automatically insert correct domain name of this site."
+#: models.py:53
+msgid "Keep tree"
+msgstr ""
+
+#: models.py:54
+msgid "Only applies when wildcard matching enabled"
+msgstr ""
+
+#: models.py:58
+msgid "Keep querystring"
+msgstr ""
+
+#: models.py:59
+msgid "Re-applies GET querystring, if any (?page=4&search=banana)"
+msgstr ""
+
+#: models.py:67
+msgid "Optional, automatically insert correct domain name of this site"
 msgstr ""

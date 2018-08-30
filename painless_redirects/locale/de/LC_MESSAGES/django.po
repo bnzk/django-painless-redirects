@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-04 12:30+0200\n"
+"POT-Creation-Date: 2018-08-30 10:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Ben Stähli <bnzk@bnzk.ch>, 2017\n"
 "Language-Team: German (https://www.transifex.com/bnzk/teams/73171/de/)\n"
@@ -26,42 +26,63 @@ msgstr "Von "
 msgid "To"
 msgstr "Ziel"
 
-#: models.py:19
-msgid "From path"
-msgstr "Von"
+#: models.py:23
+msgid "Permanent redirect (301)"
+msgstr "Permanente Umleitung"
 
-#: models.py:20
-msgid ""
-"This should be an absolute path, excluding the domain name. Example: '/"
-"events/search/'."
+#: models.py:24
+msgid "For temporary fixes, uncheck to use a status code of 302"
+msgstr "Für temporäre Umleitungen entfernen"
+
+#: models.py:26
+msgid "From path"
+msgstr "Von Pfad"
+
+#: models.py:27
+msgid "Absolute path, excluding the domain name. Example: '/events/search/'"
 msgstr ""
 "Absoluter Pfad in der folgenden Form: /de/bitte-umleiten/ (ohne Domainname!)"
 
-#: models.py:21
-msgid "Wildcard mode"
-msgstr "Unterseiten umleiten"
+#: models.py:30
+msgid "Wildcard match"
+msgstr "Unterseiten mitumleiten"
 
-#: models.py:22
-msgid "Add wildcard (*) to from path"
-msgstr "Leitet auch alle Unterseiten zum Zielpfad um."
+#: models.py:31
+msgid "Add wildcard (/from/path/*)"
+msgstr "Alle Unterseiten (/von/pfad/*) werden umgeleitet"
 
-#: models.py:25
-msgid "Optional, limit redirect to this site."
-msgstr "Optional. Redirect nur gültig für diese Domain."
+#: models.py:45
+msgid "Optional, limit redirect to this site"
+msgstr "Optional. Redirect nur gültig für diese Domain"
 
-#: models.py:27
-msgid "Optional, exlicitly limit to specific domain."
-msgstr "Optional. Redirect nur gültig für diese Domain."
+#: models.py:48
+msgid "Optional, exlicitly limit to specific domain"
+msgstr "Optional. Redirect nur gültig für diese Domain"
 
-#: models.py:28
+#: models.py:49
 msgid "To path"
-msgstr "Ziel"
+msgstr "Zielpfad"
 
-#: models.py:29
-msgid "Absolute path, or full url (with http://.../)."
-msgstr ""
-"Absoluter Pfad (/xyz/), oder komplette URI (http://www.zieldomain.com/ziel)"
+#: models.py:50
+msgid "Absolute path, or full url (with http://.../)"
+msgstr "Absoluter Pfad (/xyz/), oder komplette URL (http://www.xy.com/ziel)"
 
-#: models.py:32
-msgid "Optional, automatically insert correct domain name of this site."
+#: models.py:53
+msgid "Keep tree"
+msgstr "Komplette Adresse behalten"
+
+#: models.py:54
+msgid "Only applies when wildcard matching enabled"
+msgstr "Nur when Unterseiten umgeleitet werden"
+
+#: models.py:58
+msgid "Keep querystring"
+msgstr "GET Querystring behalten"
+
+#: models.py:59
+msgid "Re-applies GET querystring, if any (?page=4&search=banana)"
+msgstr "Fügt den Querystring bei der Umleitung hinzu (?seite=4&suche=banana)"
+
+#: models.py:67
+msgid "Optional, automatically insert correct domain name of this site"
 msgstr "Optional, automatisch auf diese Domain umleiten."

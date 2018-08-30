@@ -56,7 +56,7 @@ class Redirect(models.Model):
     keep_querystring = models.BooleanField(
         default=False,
         verbose_name=_("Keep querystring"),
-        help_text=_("Re-applies GET querystring, if any"),
+        help_text=_("Re-applies GET querystring, if any (?page=4&search=banana)"),
    )
     new_site = models.ForeignKey(
         Site,
