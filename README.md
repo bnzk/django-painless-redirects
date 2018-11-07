@@ -1,17 +1,13 @@
-django painless redirects
-=========================
+# django painless redirects
 
-.. image:: https://travis-ci.org/bnzk/django-painless-redirects.svg
-    :target: https://travis-ci.org/bnzk/django-painless-redirects/
-.. image:: https://img.shields.io/pypi/v/django-painless-redirects.svg
-    :target: https://pypi.python.org/pypi/django-painless-redirects/
-.. image:: https://img.shields.io/pypi/l/django-painless-redirects.svg
-    :target: https://pypi.python.org/pypi/django-painless-redirects/
+[![Build Status](https://travis-ci.org/bnzk/django-painless-redirects.svg "Build Status")](https://travis-ci.org/bnzk/django-painless-redirects/)
+[![PyPi Version](https://img.shields.io/pypi/v/django-painless-redirects.svg "PyPi Version")](https://pypi.python.org/pypi/django-painless-redirects/)
+[![Licence](https://img.shields.io/pypi/l/django-painless-redirects.svg "Licence")](https://pypi.python.org/pypi/django-painless-redirects/)
 
 like django.contrib.redirects, on steroids. maybe.
 
-Features
---------
+
+## Features
 
 - simple redirects table, with that bit more flexibility / convenience
     - wildcard matching
@@ -27,18 +23,13 @@ Yet to be done:
 - contrib packages with "magic" redirects for django-cms, django-filer -> SEO becoming easy.
 
 
-Installation & Usage
---------------------
+## Installation & Usage
 
 To get the latest stable release from PyPi
-
-.. code-block:: bash
 
     pip install django-painless-redirects
 
 Add ``painless_redirects`` to your ``INSTALLED_APPS``
-
-.. code-block:: python
 
     INSTALLED_APPS = (
         ...,
@@ -48,28 +39,22 @@ Add ``painless_redirects`` to your ``INSTALLED_APPS``
 Add the following middlware to MIDDLEWARE_CLASSES (1.10 style middlewares will be supported soon),
 to make basic redirects work.
 
-.. code-block:: bash
-
     painless_redirects.middleware.ManualRedirectMiddleware
 
 If you want to be redirected to the domain name entered in your current site (django.contrib.sites must be installed),
 also add this middleware:
 
-.. code-block:: bash
-
     painless_redirects.middleware.ForceSiteDomainRedirectMiddleware
 
 
-Development
------------
+## Development
 
 - there is test app, available with `./manage.py runserver`.
 - to run tests: ./manage.py test
 - to run tests with django 1.8 / 1.9 / 1.10: `tox`
 
 
-Contributions
--------------
+## Contributions
 
 If you want to contribute to this project, please perform the following steps
 

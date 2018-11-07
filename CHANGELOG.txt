@@ -9,7 +9,8 @@
 - new feature: MIDDLEWARE setting compatible (django 1.10+ middleware style)
 - should be backward compatible
 - should work up to django 2.1
-- support for django below 1.11: still working in tests, but, yea, you should update.
+- support for django below 1.11: still working in tests, but, yea, you should update!
+
 
 === 0.1.5 ===
 - fixing broken admin regression from 0.1.4
