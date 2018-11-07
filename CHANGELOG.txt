@@ -2,6 +2,9 @@
 - log 404s
 - contrib packages that add redirects automagically
 
+=== 0.2.1 (2018-11-07) ===
+- adding a missing migration (updating labels!)
+
 === 0.2 (2018-08-30) ===
 - new feature: keep treee
 - new feature: keep getvars
