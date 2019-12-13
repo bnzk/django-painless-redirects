@@ -6,6 +6,7 @@ from django.contrib.sites.models import Site
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
+from painless_redirects.managers import RedirectQuerySet
 
 REDIRECT_TYPE_CHOICES = (
     (301, "Moved permanently"),
@@ -18,6 +19,21 @@ class Redirect(models.Model):
     # max length note: mysql index cannot be more than 1000bytes, so with utf-8,
     # we can have no more than max_length=333 for old_path
     # creator = models.CharField(_(u'Creator'), max_length=128, blank=True)
+    enabled = models.BooleanField(
+        default=True,
+        verbose_name=_(u'Enabled'),
+        help_text=_("Shall this redirect be effectivly used?"),
+    )
+    auto_created = models.BooleanField(
+        default=False,
+        verbose_name=_(u'Auto created'),
+        help_text=_("Created by a 404 hit? (must be enabled via settings)"),
+        editable = False
+    )
+    hits = models.IntegerField(
+        default=0,
+        editable=False,
+    )
     permanent = models.BooleanField(
         default=True,
         verbose_name=_(u'Permanent redirect (301)'),
@@ -57,7 +73,7 @@ class Redirect(models.Model):
         default=False,
         verbose_name=_("Keep querystring"),
         help_text=_("Re-applies GET querystring, if any (?page=4&search=banana)"),
-   )
+    )
     new_site = models.ForeignKey(
         Site,
         null=True,
@@ -66,10 +82,8 @@ class Redirect(models.Model):
         related_name="redirect_new_site",
         help_text=_('Optional, automatically insert correct domain name of this site'),
     )
-    # redirect_type = models.SmallIntegerField(
-    #    choices=REDIRECT_TYPE_CHOICES, default=301,
-    #    help_text=_(u"You know what you do, right? (If not: 301)"))
-    # preserve_get = models.BooleanField(default=False)
+
+    objects = RedirectQuerySet.as_manager()
 
     class Meta:
         verbose_name = "Redirect"

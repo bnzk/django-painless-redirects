@@ -8,6 +8,7 @@ from django.utils.http import urlquote
 from django.contrib.sites.models import Site
 
 from .models import Redirect
+from . import conf
 
 
 class ForceSiteDomainRedirectMiddleware(object):
@@ -79,12 +80,15 @@ class ManualRedirectMiddleware(object):
         if host == current_site.domain:
             return None
         # match?
-        redirect = Redirect.objects.filter(domain=host, old_path=request.path)
+        redirect = Redirect.objects.enabled().filter(domain=host, old_path=request.path)
         # only domain. redirect anyway!
         if not redirect.count():
-            redirect = Redirect.objects.filter(domain=host)
+            redirect = Redirect.objects.enabled().filter(domain=host)
         if redirect.count():
             new_uri = redirect[0].redirect_value(request.scheme)
+            # hits
+            redirect[0].hits += 1
+            redirect[0].save()
             return http.HttpResponsePermanentRedirect(new_uri)
 
     def process_response(self, request, response):
@@ -108,12 +112,26 @@ class ManualRedirectMiddleware(object):
         # exact path match
         if not redirect.count():
             redirect, right_path = self._check_for_redirect(current_path, **{'site': None, 'domain': '', })
-        if redirect.count():
+        if not redirect.count() and conf.PAINLESS_REDIRECTS_AUTO_CREATE:
+            kwargs = {
+                'old_path': current_path,
+                'auto_created': True,
+                # via settings?
+                'enabled': False,
+                'site': current_site,
+                'new_path': '/',
+            }
+            r = Redirect(**kwargs)
+            redirect = [r]
+        if len(redirect):
             new_uri = redirect[0].redirect_value(
                 request.scheme,
                 right_path=right_path,
                 querystring=querystring,
             )
+            # hits
+            redirect[0].hits += 1
+            redirect[0].save()
             if redirect[0].permanent:
                 return http.HttpResponsePermanentRedirect(new_uri)
             else:
@@ -121,13 +139,13 @@ class ManualRedirectMiddleware(object):
         return response
 
     def _check_for_redirect(self, path, **kwargs):
-        redirect = Redirect.objects.filter(old_path=path, **kwargs)
+        redirect = Redirect.objects.enabled().filter(old_path=path, **kwargs)
         right_path = ""
         # wildcard match
         if not redirect.count():
             remaining_path, rubbish = path.rsplit("/", 1)
             while remaining_path:
-                redirect = Redirect.objects.filter(
+                redirect = Redirect.objects.enabled().filter(
                     old_path=remaining_path + "/", wildcard_match=True, **kwargs)
                 if redirect.count():
                     break

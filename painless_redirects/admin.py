@@ -9,8 +9,19 @@ from . import models
 
 class RedirectAdmin(admin.ModelAdmin):
     search_fields = ['old_path', 'domain', 'new_path', ]
-    list_filter = ['site', 'domain', 'new_site', 'wildcard_match', ]
+    list_filter = [
+        'enabled',
+        'auto_created',
+        'wildcard_match',
+        'site',
+        'new_site',
+        'domain',
+    ]
+    readonly_fields = ['auto_created', 'hits', ]
     fieldsets = (
+        ('', {
+            'fields': (('enabled', 'auto_created', 'hits', ), ),
+        }),
         (_('From'), {
             'fields': (('old_path', 'wildcard_match', ), 'site', 'domain', ),
         }),
