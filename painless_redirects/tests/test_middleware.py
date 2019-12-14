@@ -3,7 +3,10 @@
 # dont add this, request.path is non unicode in python 2.7
 # or add it, as request.path shoudl be unicode anyway?!
 # from __future__ import unicode_literals
-from importlib import reload
+try:
+    reload
+except NameError:
+    from importlib import reload
 
 from django.contrib.sites.models import Site
 from django.http import QueryDict
