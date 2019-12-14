@@ -113,11 +113,12 @@ class ManualRedirectMiddleware(object):
         if not redirect.count():
             redirect, right_path = self._check_for_redirect(current_path, **{'site': None, 'domain': '', })
         if not redirect.count() and conf.PAINLESS_REDIRECTS_AUTO_CREATE:
+            the_site = current_site if conf.PAINLESS_REDIRECTS_AUTO_CREATE_SITE else None
             kwargs = {
                 'old_path': current_path,
                 'auto_created': True,
                 # site also via settings?
-                'site': current_site,
+                'site': the_site,
                 'enabled': conf.PAINLESS_REDIRECTS_AUTO_CREATE_ENABLED,
                 'new_path': conf.PAINLESS_REDIRECTS_AUTO_CREATE_TO_PATH,
             }
