@@ -122,6 +122,12 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, "/the-new-path/")
+        obj.refresh_from_db()
+        self.assertEqual(obj.hits, 1)
+        self.middleware.process_response(self.request, self.response)
+        self.middleware.process_response(self.request, self.response)
+        obj.refresh_from_db()
+        self.assertEqual(obj.hits, 3)
 
     def test_redirect_not_enabled(self):
         reload(conf)
@@ -133,6 +139,12 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.request.path = obj.old_path
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 404)
+        obj.refresh_from_db()
+        self.assertEqual(obj.hits, 1)
+        self.middleware.process_response(self.request, self.response)
+        self.middleware.process_response(self.request, self.response)
+        obj.refresh_from_db()
+        self.assertEqual(obj.hits, 3)
 
     def test_simple_redirect_keep_querystring(self):
         obj = factories.RedirectFactory()

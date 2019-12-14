@@ -39,8 +39,11 @@ class Redirect(models.Model):
         verbose_name=_(u'Permanent redirect (301)'),
         help_text=_("For temporary fixes, uncheck to use a status code of 302"),
     )
-    old_path = models.CharField(_(u'From path'), max_length=255,
-        help_text=_("Absolute path, excluding the domain name. Example: '/events/search/'"))
+    old_path = models.CharField(
+        _(u'From path'),
+        max_length=255,
+        help_text=_("Absolute path, excluding the domain name. Example: '/events/search/'")
+    )
     wildcard_match = models.BooleanField(
         default=False,
         verbose_name=_(u'Wildcard match'),
@@ -60,10 +63,17 @@ class Redirect(models.Model):
         related_name="redirect_old_site",
         help_text=_('Optional, limit redirect to this site'),
     )
-    domain = models.CharField(max_length=64, blank=True, default='',
-        help_text=_('Optional, exlicitly limit to specific domain'))
-    new_path = models.CharField(_(u'To path'), max_length=255,
-        help_text=_('Absolute path, or full url (with http://.../)'))
+    domain = models.CharField(
+        max_length=64,
+        blank=True,
+        default='',
+        help_text=_('Optional, exlicitly limit to specific domain'),
+    )
+    new_path = models.CharField(
+        _(u'To path'),
+        max_length=255,
+        help_text=_('Absolute path, or full url (with http://.../)'),
+    )
     keep_tree = models.BooleanField(
         default=False,
         verbose_name=_("Keep tree"),

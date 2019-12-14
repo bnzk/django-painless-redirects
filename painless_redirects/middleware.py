@@ -80,10 +80,10 @@ class ManualRedirectMiddleware(object):
         if host == current_site.domain:
             return None
         # match?
-        redirect = Redirect.objects.enabled().filter(domain=host, old_path=request.path)
+        redirect = Redirect.objects.filter(domain=host, old_path=request.path)
         # only domain. redirect anyway!
         if not redirect.count():
-            redirect = Redirect.objects.enabled().filter(domain=host)
+            redirect = Redirect.objects.filter(domain=host)
         if redirect.count():
             new_uri = redirect[0].redirect_value(request.scheme)
             # hits
@@ -116,36 +116,43 @@ class ManualRedirectMiddleware(object):
             kwargs = {
                 'old_path': current_path,
                 'auto_created': True,
-                # via settings?
-                'enabled': False,
+                # site also via settings?
                 'site': current_site,
-                'new_path': '/',
+                'enabled': conf.PAINLESS_REDIRECTS_AUTO_CREATE_ENABLED,
+                'new_path': conf.PAINLESS_REDIRECTS_AUTO_CREATE_TO_PATH,
             }
             r = Redirect(**kwargs)
+            r.save()
             redirect = [r]
         if len(redirect):
-            new_uri = redirect[0].redirect_value(
-                request.scheme,
-                right_path=right_path,
-                querystring=querystring,
-            )
-            # hits
-            redirect[0].hits += 1
-            redirect[0].save()
-            if redirect[0].permanent:
-                return http.HttpResponsePermanentRedirect(new_uri)
-            else:
-                return http.HttpResponseRedirect(new_uri)
+            enabled_redirect = None
+            for r in redirect:
+                # hits
+                r.hits += 1
+                r.save()
+                if r.enabled and not enabled_redirect:
+                    enabled_redirect = r
+            if enabled_redirect:
+                new_uri = enabled_redirect.redirect_value(
+                    request.scheme,
+                    right_path=right_path,
+                    querystring=querystring,
+                )
+                if enabled_redirect.permanent:
+                    return http.HttpResponsePermanentRedirect(new_uri)
+                else:
+                    return http.HttpResponseRedirect(new_uri)
+
         return response
 
     def _check_for_redirect(self, path, **kwargs):
-        redirect = Redirect.objects.enabled().filter(old_path=path, **kwargs)
+        redirect = Redirect.objects.filter(old_path=path, **kwargs)
         right_path = ""
         # wildcard match
         if not redirect.count():
             remaining_path, rubbish = path.rsplit("/", 1)
             while remaining_path:
-                redirect = Redirect.objects.enabled().filter(
+                redirect = Redirect.objects.filter(
                     old_path=remaining_path + "/", wildcard_match=True, **kwargs)
                 if redirect.count():
                     break
