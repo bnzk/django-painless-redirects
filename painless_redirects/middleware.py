@@ -8,6 +8,7 @@ from django.utils.http import urlquote
 from django.contrib.sites.models import Site
 
 from .models import Redirect
+from . import conf
 
 
 class ForceSiteDomainRedirectMiddleware(object):
@@ -85,6 +86,9 @@ class ManualRedirectMiddleware(object):
             redirect = Redirect.objects.filter(domain=host)
         if redirect.count():
             new_uri = redirect[0].redirect_value(request.scheme)
+            # hits
+            redirect[0].hits += 1
+            redirect[0].save()
             return http.HttpResponsePermanentRedirect(new_uri)
 
     def process_response(self, request, response):
@@ -108,16 +112,38 @@ class ManualRedirectMiddleware(object):
         # exact path match
         if not redirect.count():
             redirect, right_path = self._check_for_redirect(current_path, **{'site': None, 'domain': '', })
-        if redirect.count():
-            new_uri = redirect[0].redirect_value(
-                request.scheme,
-                right_path=right_path,
-                querystring=querystring,
-            )
-            if redirect[0].permanent:
-                return http.HttpResponsePermanentRedirect(new_uri)
-            else:
-                return http.HttpResponseRedirect(new_uri)
+        if not redirect.count() and conf.PAINLESS_REDIRECTS_AUTO_CREATE:
+            the_site = current_site if conf.PAINLESS_REDIRECTS_AUTO_CREATE_SITE else None
+            kwargs = {
+                'old_path': current_path,
+                'auto_created': True,
+                # site also via settings?
+                'site': the_site,
+                'enabled': conf.PAINLESS_REDIRECTS_AUTO_CREATE_ENABLED,
+                'new_path': conf.PAINLESS_REDIRECTS_AUTO_CREATE_TO_PATH,
+            }
+            r = Redirect(**kwargs)
+            r.save()
+            redirect = [r]
+        if len(redirect):
+            enabled_redirect = None
+            for r in redirect:
+                # hits
+                r.hits += 1
+                r.save()
+                if r.enabled and not enabled_redirect:
+                    enabled_redirect = r
+            if enabled_redirect:
+                new_uri = enabled_redirect.redirect_value(
+                    request.scheme,
+                    right_path=right_path,
+                    querystring=querystring,
+                )
+                if enabled_redirect.permanent:
+                    return http.HttpResponsePermanentRedirect(new_uri)
+                else:
+                    return http.HttpResponseRedirect(new_uri)
+
         return response
 
     def _check_for_redirect(self, path, **kwargs):

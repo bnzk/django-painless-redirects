@@ -3,14 +3,25 @@
 # dont add this, request.path is non unicode in python 2.7
 # or add it, as request.path shoudl be unicode anyway?!
 # from __future__ import unicode_literals
+try:
+    reload
+except NameError:
+    from importlib import reload
 
 from django.contrib.sites.models import Site
 from django.http import QueryDict
 from django.test import TestCase
+from django.test import override_settings
 from mock import Mock
 
+from painless_redirects import conf
 from . import factories
 from ..middleware import ManualRedirectMiddleware, ForceSiteDomainRedirectMiddleware
+
+
+no_auto_create = override_settings(
+    PAINLESS_REDIRECTS_AUTO_CREATE=False,
+)
 
 
 class ForceSiteDomainRedirectMiddlewareTestCase(TestCase):
@@ -62,7 +73,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.middleware = ManualRedirectMiddleware()
         self.request = Mock()
         self.request.META = {}
-        self.request.get_host = lambda : 'host.com'
+        self.request.get_host = lambda: 'host.com'
         self.response = Mock()
 
     def test_no_404(self):
@@ -73,7 +84,9 @@ class ManualRedirectMiddlewareTestCase(TestCase):
             self.middleware.process_response(self.request, self.response),
             self.response)
 
+    @no_auto_create
     def test_no_redirect_found(self):
+        reload(conf)
         factories.RedirectFactory()
         self.request.path = "/some-other-path/"
         self.response.status_code = 404
@@ -81,7 +94,9 @@ class ManualRedirectMiddlewareTestCase(TestCase):
             self.middleware.process_response(self.request, self.response),
             self.response)
 
+    @no_auto_create
     def test_no_redirect_when_site_specified(self):
+        reload(conf)
         obj = factories.RedirectFactory()
         obj.site = factories.SiteFactory()
         obj.save()
@@ -92,6 +107,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
             self.response)
 
     def test_simple_redirect(self):
+        reload(conf)
         obj = factories.RedirectFactory()
         self.response.status_code = 404
         self.request.path = obj.old_path
@@ -100,6 +116,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.assertEqual(response.url, "/the-new-path/")
 
     def test_simple_redirect_302(self):
+        reload(conf)
         obj = factories.RedirectFactory()
         obj.permanent = False
         obj.save()
@@ -108,6 +125,29 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, "/the-new-path/")
+        obj.refresh_from_db()
+        self.assertEqual(obj.hits, 1)
+        self.middleware.process_response(self.request, self.response)
+        self.middleware.process_response(self.request, self.response)
+        obj.refresh_from_db()
+        self.assertEqual(obj.hits, 3)
+
+    def test_redirect_not_enabled(self):
+        reload(conf)
+        obj = factories.RedirectFactory()
+        obj.permanent = False
+        obj.enabled = False
+        obj.save()
+        self.response.status_code = 404
+        self.request.path = obj.old_path
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 404)
+        obj.refresh_from_db()
+        self.assertEqual(obj.hits, 1)
+        self.middleware.process_response(self.request, self.response)
+        self.middleware.process_response(self.request, self.response)
+        obj.refresh_from_db()
+        self.assertEqual(obj.hits, 3)
 
     def test_simple_redirect_keep_querystring(self):
         obj = factories.RedirectFactory()
@@ -132,6 +172,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")
 
+    @no_auto_create
     def test_special_chars_in_url(self):
         """
         in python 2.7, request.path seems to be ascii, in certain deployment scenarios
@@ -139,6 +180,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         probably related: https://serverfault.com/questions/359934/unicodeencodeerror-when-uploading-files-in-django-admin
         only happened on a uwsgi configuration for now.
         """
+        reload(conf)
         obj = factories.RedirectFactory()
         self.response.status_code = 404
         self.request.path = obj.old_path
@@ -212,7 +254,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         obj.new_path = 'http://another.com/'
         obj.save()
         self.request.path = obj.old_path
-        self.request.get_host = lambda : 'custom.com'
+        self.request.get_host = lambda: 'custom.com'
         self.response.status_code = 200
         response = self.middleware.process_request(self.request, )
         self.assertEqual(response.status_code, 301)
@@ -226,11 +268,10 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         obj.save()
         self.request.path = obj.old_path
         # check for false positives!
-        self.request.get_host = lambda : 'none-or-what.com'
+        self.request.get_host = lambda: 'none-or-what.com'
         self.response.status_code = 200
         response = self.middleware.process_request(self.request)
         self.assertEqual(response, None)
         response = self.middleware.process_response(self.request, self.response)
         self.assertNotEqual(response.status_code, 301)
         # self.assertEqual(response.url, "http://another.com/")
-

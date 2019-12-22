@@ -3,9 +3,15 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.sites.models import Site
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
+try:
+    from django.utils.encoding import python_2_unicode_compatible
+except ImportError:
+    def python_2_unicode_compatible(f):
+        return f
+
+from painless_redirects.managers import RedirectQuerySet
 
 REDIRECT_TYPE_CHOICES = (
     (301, "Moved permanently"),
@@ -18,13 +24,31 @@ class Redirect(models.Model):
     # max length note: mysql index cannot be more than 1000bytes, so with utf-8,
     # we can have no more than max_length=333 for old_path
     # creator = models.CharField(_(u'Creator'), max_length=128, blank=True)
+    enabled = models.BooleanField(
+        default=True,
+        verbose_name=_(u'Enabled'),
+        help_text=_("Shall this redirect be effectivly used?"),
+    )
+    auto_created = models.BooleanField(
+        default=False,
+        verbose_name=_(u'Auto created'),
+        help_text=_("Created by a 404 hit? (must be enabled via settings)"),
+        editable=False,
+    )
+    hits = models.IntegerField(
+        default=0,
+        editable=False,
+    )
     permanent = models.BooleanField(
         default=True,
         verbose_name=_(u'Permanent redirect (301)'),
         help_text=_("For temporary fixes, uncheck to use a status code of 302"),
     )
-    old_path = models.CharField(_(u'From path'), max_length=255,
-        help_text=_("Absolute path, excluding the domain name. Example: '/events/search/'"))
+    old_path = models.CharField(
+        _(u'From path'),
+        max_length=255,
+        help_text=_("Absolute path, excluding the domain name. Example: '/events/search/'")
+    )
     wildcard_match = models.BooleanField(
         default=False,
         verbose_name=_(u'Wildcard match'),
@@ -44,10 +68,17 @@ class Redirect(models.Model):
         related_name="redirect_old_site",
         help_text=_('Optional, limit redirect to this site'),
     )
-    domain = models.CharField(max_length=64, blank=True, default='',
-        help_text=_('Optional, exlicitly limit to specific domain'))
-    new_path = models.CharField(_(u'To path'), max_length=255,
-        help_text=_('Absolute path, or full url (with http://.../)'))
+    domain = models.CharField(
+        max_length=64,
+        blank=True,
+        default='',
+        help_text=_('Optional, exlicitly limit to specific domain'),
+    )
+    new_path = models.CharField(
+        _(u'To path'),
+        max_length=255,
+        help_text=_('Absolute path, or full url (with http://.../)'),
+    )
     keep_tree = models.BooleanField(
         default=False,
         verbose_name=_("Keep tree"),
@@ -57,7 +88,7 @@ class Redirect(models.Model):
         default=False,
         verbose_name=_("Keep querystring"),
         help_text=_("Re-applies GET querystring, if any (?page=4&search=banana)"),
-   )
+    )
     new_site = models.ForeignKey(
         Site,
         null=True,
@@ -66,10 +97,8 @@ class Redirect(models.Model):
         related_name="redirect_new_site",
         help_text=_('Optional, automatically insert correct domain name of this site'),
     )
-    # redirect_type = models.SmallIntegerField(
-    #    choices=REDIRECT_TYPE_CHOICES, default=301,
-    #    help_text=_(u"You know what you do, right? (If not: 301)"))
-    # preserve_get = models.BooleanField(default=False)
+
+    objects = RedirectQuerySet.as_manager()
 
     class Meta:
         verbose_name = "Redirect"
