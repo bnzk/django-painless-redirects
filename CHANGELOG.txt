@@ -1,6 +1,9 @@
 === (ongoing) ===
 - contrib packages that add redirects automagically
 
+=== 0.3.1 (2019-12-22) ===
+- resolving mess with PYPI.rst
+
 
 === 0.3.0 (2019-12-22) ===
 - auto create redirects on 404 hits
