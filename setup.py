@@ -37,18 +37,11 @@ install_requires = [
 ]
 
 
-def read(fname):
-    try:
-        return open(os.path.join(os.path.dirname(__file__), fname)).read()
-    except IOError:
-        return ''
-
-
 setup(
     name="django-painless-redirects",
     version=app.__version__,
-    description=read('DESCRIPTION'),
-    long_description=read('PYPI.rst'),
+    description='like django.contrib.redirects on steroids. maybe.',
+    long_description=open(os.path.join(os.path.dirname(__file__), 'PYPI.rst')).read(),
     license='The MIT License',
     platforms=['OS Independent'],
     keywords='django, redirect',

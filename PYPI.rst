@@ -1,4 +1,3 @@
-
 .. image:: https://travis-ci.org/bnzk/django-painless-redirects.svg
     :target: https://travis-ci.org/bnzk/django-painless-redirects/
 .. image:: https://img.shields.io/pypi/v/django-painless-redirects.svg
