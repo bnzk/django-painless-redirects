@@ -1,5 +1,4 @@
 === (ongoing) ===
-- docs for auto creation of redirects
 - contrib packages that add redirects automagically
 
 
@@ -8,6 +7,7 @@
 - log/count 404 hits
 - settings for log and auto creation
 - drop py2!
+- officialy support django 1.11 up to 3.0
 
 
 === 0.2.1 (2018-11-07) ===

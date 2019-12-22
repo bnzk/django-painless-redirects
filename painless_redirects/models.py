@@ -3,8 +3,13 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.sites.models import Site
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+
+try:
+    from django.utils.encoding import python_2_unicode_compatible
+except ImportError:
+    def python_2_unicode_compatible(f):
+        return f
 
 from painless_redirects.managers import RedirectQuerySet
 
