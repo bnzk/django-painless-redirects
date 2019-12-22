@@ -28,7 +28,7 @@ class Redirect(models.Model):
         default=False,
         verbose_name=_(u'Auto created'),
         help_text=_("Created by a 404 hit? (must be enabled via settings)"),
-        editable = False
+        editable=False,
     )
     hits = models.IntegerField(
         default=0,

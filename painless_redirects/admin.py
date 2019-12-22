@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from . import models
 
 
+@admin.register(models.Redirect)
 class RedirectAdmin(admin.ModelAdmin):
     search_fields = ['old_path', 'domain', 'new_path', ]
     list_display = ('__str__', 'hits', 'enabled', )
@@ -30,5 +31,3 @@ class RedirectAdmin(admin.ModelAdmin):
             'fields': ('new_path', ('keep_tree', 'keep_querystring', ), 'new_site', 'permanent', )
         }),
     )
-
-admin.site.register(models.Redirect, RedirectAdmin)

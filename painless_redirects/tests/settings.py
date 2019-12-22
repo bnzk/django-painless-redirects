@@ -1,7 +1,7 @@
 """Settings that need to be set in order to run the tests."""
 import os
 import logging
-import django.conf.global_settings as DEFAULT_SETTINGS
+# just in case import django.conf.global_settings as DEFAULT_SETTINGS
 
 DEBUG = True
 
