@@ -6,6 +6,7 @@
 
 
 === 0.3.0 (2019-12-22) ===
+- NOT ON PYPI!
 - auto create redirects on 404 hits
 - log/count 404 hits
 - settings for log and auto creation
