@@ -23,9 +23,6 @@ REDIRECT_TYPE_CHOICES = (
 
 @python_2_unicode_compatible
 class Redirect(models.Model):
-    # max length note: mysql index cannot be more than 1000bytes, so with utf-8,
-    # we can have no more than max_length=333 for old_path
-    # creator = models.CharField(_(u'Creator'), max_length=128, blank=True)
     enabled = models.BooleanField(
         default=True,
         verbose_name=_(u'Enabled'),
@@ -46,6 +43,8 @@ class Redirect(models.Model):
         verbose_name=_(u'Permanent redirect (301)'),
         help_text=_("For temporary fixes, uncheck to use a status code of 302"),
     )
+    # max length note: mysql index cannot be more than 307Xbytes, so with utf-8,
+    # we can have no more than max_length around 800 for old_path
     old_path = models.CharField(
         _(u'From path'),
         # check https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
