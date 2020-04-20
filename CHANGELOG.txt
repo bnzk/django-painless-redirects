@@ -2,6 +2,10 @@
 - contrib packages that add redirects automagically
 
 
+=== 0.3.3 (2020-04-20) ===
+- mysql index fix for max_length. old_path can now be 800 chars max
+
+
 === 0.3.2 (2020-04-20) ===
 - no more exceptions when redirects with too long urls are auto created
 - admin actions for deleting auto created redirects (all/disabled only)

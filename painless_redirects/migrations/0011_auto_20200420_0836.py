@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='redirect',
             name='old_path',
-            field=models.CharField(help_text="Absolute path, excluding the domain name. Example: '/events/search/'", max_length=1024, verbose_name='From path'),
+            field=models.CharField(help_text="Absolute path, excluding the domain name. Example: '/events/search/'", max_length=800, verbose_name='From path'),
         ),
     ]
