@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('painless_redirects', '0011_auto_20200420_0705'),
+        ('painless_redirects', '0010_auto_20191213_0650'),
     ]
 
     operations = [
