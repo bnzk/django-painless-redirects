@@ -4,7 +4,7 @@
 
 === 0.3.2 (2020-04-20) ===
 - no more exceptions when redirects with too long urls are auto created
--
+- admin actions for deleting auto created redirects (all/disabled only)
 
 
 === 0.3.1 (2019-12-22) ===
