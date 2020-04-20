@@ -2,6 +2,10 @@
 - contrib packages that add redirects automagically
 
 
+=== 0.3.4 (2020-04-20) ===
+- fix migrations chaos in wheel version!
+
+
 === 0.3.3 (2020-04-20) ===
 - mysql index fix for max_length. old_path can now be 800 chars max
 
