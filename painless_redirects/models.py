@@ -5,6 +5,8 @@ from django.db import models
 from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
 
+from painless_redirects import conf
+
 try:
     from django.utils.encoding import python_2_unicode_compatible
 except ImportError:
@@ -46,7 +48,8 @@ class Redirect(models.Model):
     )
     old_path = models.CharField(
         _(u'From path'),
-        max_length=255,
+        # check https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+        max_length=conf.PAINLESS_REDIRECTS_OLD_PATH_MAX_LENGTH,
         help_text=_("Absolute path, excluding the domain name. Example: '/events/search/'")
     )
     wildcard_match = models.BooleanField(

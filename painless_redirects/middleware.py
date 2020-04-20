@@ -104,6 +104,7 @@ class ManualRedirectMiddleware(object):
         querystring = request.META.get('QUERY_STRING', None)
         if querystring:
             current_path += '?' + force_text(querystring)
+        current_path = current_path[:conf.PAINLESS_REDIRECTS_OLD_PATH_MAX_LENGTH]
         # path and domain!
         redirect, right_path = self._check_for_redirect(current_path, **{'domain': host, })
         # exact match of path and site.
@@ -143,7 +144,6 @@ class ManualRedirectMiddleware(object):
                     return http.HttpResponsePermanentRedirect(new_uri)
                 else:
                     return http.HttpResponseRedirect(new_uri)
-
         return response
 
     def _check_for_redirect(self, path, **kwargs):

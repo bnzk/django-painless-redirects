@@ -1,6 +1,8 @@
 from django.conf import settings
 
 
+PAINLESS_REDIRECTS_OLD_PATH_MAX_LENGTH = 2048
+
 # auto create redirect to / when a 404 is detected
 PAINLESS_REDIRECTS_AUTO_CREATE = getattr(
     settings, 'PAINLESS_REDIRECTS_AUTO_CREATE', True

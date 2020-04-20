@@ -1,11 +1,18 @@
 === (ongoing) ===
 - contrib packages that add redirects automagically
 
+
+=== 0.3.2 (2020-04-20) ===
+- no more exceptions when redirects with too long urls are auto created
+- admin actions for deleting auto created redirects (all/disabled only)
+
+
 === 0.3.1 (2019-12-22) ===
 - resolving mess with PYPI.rst
 
 
 === 0.3.0 (2019-12-22) ===
+- NOT ON PYPI!
 - auto create redirects on 404 hits
 - log/count 404 hits
 - settings for log and auto creation
