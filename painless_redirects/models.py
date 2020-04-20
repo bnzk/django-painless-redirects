@@ -122,8 +122,8 @@ class Redirect(models.Model):
     def __str__(self):
         wildcard = "*" if self.wildcard_match else ""
         if self.domain:
-            return "%s%s%s ---> %s%s " % (
-                self.domain, self.old_path, wildcard, self.new_site, self.new_path
+            return "%s%s%s ---> %s " % (
+                self.domain, self.old_path, wildcard, self.redirect_value('http')
             )
         else:
             return "%s%s%s ---> %s" % (
