@@ -144,7 +144,6 @@ class ManualRedirectMiddleware(object):
                     return http.HttpResponsePermanentRedirect(new_uri)
                 else:
                     return http.HttpResponseRedirect(new_uri)
-
         return response
 
     def _check_for_redirect(self, path, **kwargs):

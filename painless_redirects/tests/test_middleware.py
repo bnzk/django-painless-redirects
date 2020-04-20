@@ -78,7 +78,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.request.get_host = lambda: 'host.com'
         self.response = Mock()
 
-    def test_no_404(self):
+    def test_no_404_on_status_200(self):
         obj = factories.RedirectFactory()
         self.request.path = obj.old_path
         self.response.status_code = 200
@@ -95,6 +95,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.assertEqual(
             self.middleware.process_response(self.request, self.response),
             self.response)
+        self.assertEqual(1, Redirect.objects.all().count())
 
     @no_auto_create
     def test_no_redirect_when_site_specified(self):
@@ -107,6 +108,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.assertEqual(
             self.middleware.process_response(self.request, self.response),
             self.response)
+        self.assertEqual(1, Redirect.objects.all().count())
 
     def test_simple_redirect(self):
         reload(conf)
@@ -279,6 +281,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         # self.assertEqual(response.url, "http://another.com/")
 
     def test_old_path_too_long(self):
+        reload(conf)
         very_long = '/'
         for c in range(0, conf.PAINLESS_REDIRECTS_OLD_PATH_MAX_LENGTH):
             very_long += 'ccccc'
@@ -286,6 +289,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.request.path = very_long
         # check for false positives!
         self.response.status_code = 404
-        self.middleware.process_response(self.request, self.response)
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(404, response.status_code)
         self.assertEqual(1, Redirect.objects.all().count())
         self.assertEqual(conf.PAINLESS_REDIRECTS_OLD_PATH_MAX_LENGTH, len(Redirect.objects.all()[0].old_path))
