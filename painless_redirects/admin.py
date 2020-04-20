@@ -10,7 +10,7 @@ from . import models
 @admin.register(models.Redirect)
 class RedirectAdmin(admin.ModelAdmin):
     search_fields = ['old_path', 'domain', 'new_path', ]
-    list_display = ('__str__', 'hits', 'enabled', )
+    list_display = ('__str__', 'hits', 'enabled', 'auto_created',)
     list_filter = [
         'enabled',
         'auto_created',

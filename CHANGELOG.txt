@@ -1,6 +1,12 @@
 === (ongoing) ===
 - contrib packages that add redirects automagically
 
+
+=== 0.3.2 (2020-04-20) ===
+- no more exceptions when redirects with too long urls are auto created
+-
+
+
 === 0.3.1 (2019-12-22) ===
 - resolving mess with PYPI.rst
 
