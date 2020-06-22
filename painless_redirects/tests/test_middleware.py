@@ -24,6 +24,9 @@ from ..middleware import ManualRedirectMiddleware, ForceSiteDomainRedirectMiddle
 no_auto_create = override_settings(
     PAINLESS_REDIRECTS_AUTO_CREATE=False,
 )
+auto_create = override_settings(
+    PAINLESS_REDIRECTS_AUTO_CREATE=True,
+)
 
 
 class ForceSiteDomainRedirectMiddlewareTestCase(TestCase):
@@ -179,11 +182,13 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")
 
+    @auto_create
     def test_wildcard_should_work_with_existing_auto_created_that_is_disabled(self):
         """
         jap. it should!
         :return:
         """
+        reload(conf)
         old_path = '/the-old-path/'
         self.response.status_code = 404
         self.request.path = '{}{}'.format(old_path, 'wildcard/maybe/')
@@ -203,7 +208,6 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")
         self.assertEqual(Redirect.objects.count(), 2)
-
 
     @no_auto_create
     def test_special_chars_in_url(self):

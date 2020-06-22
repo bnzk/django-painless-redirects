@@ -38,6 +38,10 @@ class RedirectHit(models.Model):
         editable=False,
     )
 
+    def __str__(self):
+        return '{} from {}'.format(self.count, self.referrer)
+
+
 @python_2_unicode_compatible
 class Redirect(models.Model):
     enabled = models.BooleanField(
