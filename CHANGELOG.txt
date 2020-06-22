@@ -1,5 +1,14 @@
 === (ongoing) ===
 - contrib packages that add redirects automagically
+- better support and test multilingual middleware (#19)
+
+
+=== 0.3.6 (2020-06-22) ===
+- prepare referrer counting
+- docs
+- bug fix: when existing auto created exact matchin but not enabled redirect was there,
+  it prevented use of enabled matchting wildcard redirect
+- using django 2.2 for creation of new migrations - dont use django 1.11 with this release and up.
 
 
 === 0.3.5 (2020-04-20) ===

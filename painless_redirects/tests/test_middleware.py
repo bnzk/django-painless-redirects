@@ -24,6 +24,9 @@ from ..middleware import ManualRedirectMiddleware, ForceSiteDomainRedirectMiddle
 no_auto_create = override_settings(
     PAINLESS_REDIRECTS_AUTO_CREATE=False,
 )
+auto_create = override_settings(
+    PAINLESS_REDIRECTS_AUTO_CREATE=True,
+)
 
 
 class ForceSiteDomainRedirectMiddlewareTestCase(TestCase):
@@ -72,6 +75,9 @@ class ManualRedirectMiddlewareTestCase(TestCase):
     check: http://blog.namis.me/2012/05/13/writing-unit-tests-for-django-middleware/
     """
     def setUp(self):
+        self._setup_request_response_middleware()
+
+    def _setup_request_response_middleware(self):
         self.middleware = ManualRedirectMiddleware()
         self.request = Mock()
         self.request.META = {}
@@ -175,6 +181,33 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/")
+
+    @auto_create
+    def test_wildcard_should_work_with_existing_auto_created_that_is_disabled(self):
+        """
+        jap. it should!
+        :return:
+        """
+        reload(conf)
+        old_path = '/the-old-path/'
+        self.response.status_code = 404
+        self.request.path = '{}{}'.format(old_path, 'wildcard/maybe/')
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 404)
+        # the auto redirects
+        self.assertEqual(Redirect.objects.count(), 1)
+        # with existing auto created redirect!
+        wildcard = factories.RedirectFactory()
+        wildcard.wildcard_match = True
+        wildcard.enabled = True
+        wildcard.save()
+        self._setup_request_response_middleware()
+        self.response.status_code = 404
+        self.request.path = '{}{}'.format(wildcard.old_path, 'wildcard/maybe/')
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, "/the-new-path/")
+        self.assertEqual(Redirect.objects.count(), 2)
 
     @no_auto_create
     def test_special_chars_in_url(self):
@@ -283,13 +316,13 @@ class ManualRedirectMiddlewareTestCase(TestCase):
     def test_old_path_too_long(self):
         reload(conf)
         very_long = '/'
-        for c in range(0, conf.PAINLESS_REDIRECTS_OLD_PATH_MAX_LENGTH):
+        for c in range(0, conf.INDEXED_CHARFIELD_MAX_LENGTH):
             very_long += 'ccccc'
-        self.assertGreater(len(very_long), conf.PAINLESS_REDIRECTS_OLD_PATH_MAX_LENGTH)
+        self.assertGreater(len(very_long), conf.INDEXED_CHARFIELD_MAX_LENGTH)
         self.request.path = very_long
         # check for false positives!
         self.response.status_code = 404
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(404, response.status_code)
         self.assertEqual(1, Redirect.objects.all().count())
-        self.assertEqual(conf.PAINLESS_REDIRECTS_OLD_PATH_MAX_LENGTH, len(Redirect.objects.all()[0].old_path))
+        self.assertEqual(conf.INDEXED_CHARFIELD_MAX_LENGTH, len(Redirect.objects.all()[0].old_path))
