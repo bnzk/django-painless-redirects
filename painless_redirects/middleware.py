@@ -117,7 +117,6 @@ class ManualRedirectMiddleware(object):
         if not redirects_enabled.count():
             kwargs = {'site': None, 'domain': '', }
             redirects_all, right_path = self._check_for_redirect(current_path, **kwargs)
-            redirects_all.filter(enabled=True)
         # not one redirect found > create auto redirect!
         if not redirects_all.count() and conf.AUTO_CREATE:
             the_site = current_site if conf.AUTO_CREATE_SITE else None
@@ -129,8 +128,7 @@ class ManualRedirectMiddleware(object):
                 'enabled': conf.AUTO_CREATE_ENABLED,
                 'new_path': conf.AUTO_CREATE_TO_PATH,
             }
-            r = Redirect(**kwargs)
-            r.save()
+            r = Redirect.objects.get_or_create(**kwargs)
             if conf.AUTO_CREATE_ENABLED:
                 redirects_all = [r]
         if len(redirects_all):
