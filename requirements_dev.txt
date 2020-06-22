@@ -1,0 +1,2 @@
+# mainly to have migrations compatible with the oldest supported django version
+django<3
