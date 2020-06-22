@@ -110,16 +110,17 @@ class ManualRedirectMiddleware(object):
         redirects_enabled = redirects_all.filter(enabled=True)
         redirects_all = list(redirects_all)
         # exact match of path and site.
+        kwargs = {'site': current_site, 'domain': '', }
+        more_redirects_all, right_path = self._check_for_redirect(current_path, **kwargs)
         if not redirects_enabled.count():
-            kwargs = {'site': current_site, 'domain': '', }
-            redirects_all_new, right_path = self._check_for_redirect(current_path, **kwargs)
-            redirects_enabled = redirects_all_new.filter(enabled=True)
-            redirects_all += list(redirects_all_new)
+            redirects_enabled = more_redirects_all.enabled()
+        redirects_all += list(more_redirects_all)
         # exact path match
+        kwargs = {'site': None, 'domain': '', }
+        more_redirects_all, right_path = self._check_for_redirect(current_path, **kwargs)
         if not redirects_enabled.count():
-            kwargs = {'site': None, 'domain': '', }
-            redirects_all_new, right_path = self._check_for_redirect(current_path, **kwargs)
-            redirects_all += list(redirects_all_new)
+            redirects_enabled = more_redirects_all.enabled()
+        redirects_all += list(more_redirects_all)
         # not one redirect found > create auto redirect!?
         if not len(redirects_all) and conf.AUTO_CREATE:
             the_site = current_site if conf.AUTO_CREATE_SITE else None
@@ -138,23 +139,21 @@ class ManualRedirectMiddleware(object):
             if conf.AUTO_CREATE_ENABLED:
                 redirects_all = [r]
         if len(redirects_all):
-            enabled_redirect = None
             for r in redirects_all:
                 # hits
                 r.hits += 1
                 r.save()
-                if r.enabled and not enabled_redirect:
-                    enabled_redirect = r
-            if enabled_redirect:
-                new_uri = enabled_redirect.redirect_value(
-                    request.scheme,
-                    right_path=right_path,
-                    querystring=querystring,
-                )
-                if enabled_redirect.permanent:
-                    return http.HttpResponsePermanentRedirect(new_uri)
-                else:
-                    return http.HttpResponseRedirect(new_uri)
+        if len(redirects_enabled):
+            r = redirects_enabled[0]
+            new_uri = r.redirect_value(
+                request.scheme,
+                right_path=right_path,
+                querystring=querystring,
+            )
+            if r.permanent:
+                return http.HttpResponsePermanentRedirect(new_uri)
+            else:
+                return http.HttpResponseRedirect(new_uri)
         return response
 
     def _check_for_redirect(self, path, **kwargs):
