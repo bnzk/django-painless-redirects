@@ -108,17 +108,20 @@ class ManualRedirectMiddleware(object):
         # path and domain!
         redirects_all, right_path = self._check_for_redirect(current_path, **{'domain': host, })
         redirects_enabled = redirects_all.filter(enabled=True)
+        redirects_all = list(redirects_all)
         # exact match of path and site.
         if not redirects_enabled.count():
             kwargs = {'site': current_site, 'domain': '', }
-            redirects_all, right_path = self._check_for_redirect(current_path, **kwargs)
-            redirects_enabled = redirects_all.filter(enabled=True)
+            redirects_all_new, right_path = self._check_for_redirect(current_path, **kwargs)
+            redirects_enabled = redirects_all_new.filter(enabled=True)
+            redirects_all += list(redirects_all_new)
         # exact path match
         if not redirects_enabled.count():
             kwargs = {'site': None, 'domain': '', }
-            redirects_all, right_path = self._check_for_redirect(current_path, **kwargs)
+            redirects_all_new, right_path = self._check_for_redirect(current_path, **kwargs)
+            redirects_all += list(redirects_all_new)
         # not one redirect found > create auto redirect!?
-        if not redirects_all.count() and conf.AUTO_CREATE:
+        if not len(redirects_all) and conf.AUTO_CREATE:
             the_site = current_site if conf.AUTO_CREATE_SITE else None
             kwargs = {
                 'old_path': current_path,
@@ -131,6 +134,7 @@ class ManualRedirectMiddleware(object):
                 r.auto_created = True
                 r.new_path = conf.AUTO_CREATE_TO_PATH
                 r.enabled = conf.AUTO_CREATE_ENABLED
+                r.save()
             if conf.AUTO_CREATE_ENABLED:
                 redirects_all = [r]
         if len(redirects_all):

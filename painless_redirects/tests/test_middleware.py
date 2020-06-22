@@ -192,6 +192,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         old_path = '/the-old-path/'
         self.response.status_code = 404
         self.request.path = '{}{}'.format(old_path, 'wildcard/maybe/')
+        self.assertEqual(Redirect.objects.count(), 0)
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 404)
         # the auto redirects
@@ -206,7 +207,7 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.request.path = '{}{}'.format(wildcard.old_path, 'wildcard/maybe/')
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 301)
-        self.assertEqual(response.url, "/the-new-path/")
+        self.assertEqual("/the-new-path/", response.url, )
         self.assertEqual(Redirect.objects.count(), 2)
 
     @no_auto_create
