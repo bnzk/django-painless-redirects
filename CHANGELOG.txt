@@ -2,6 +2,12 @@
 - contrib packages that add redirects automagically
 
 
+=== 0.3.6 (2020-06-22) ===
+- prepare referrer counting
+- docs
+- enabled bug fix
+
+
 === 0.3.5 (2020-04-20) ===
 - fix migrations chaos in wheel version, finally :-)
 

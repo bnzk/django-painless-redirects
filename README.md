@@ -48,6 +48,11 @@ also add this middleware:
     painless_redirects.middleware.ForceSiteDomainRedirectMiddleware
 
 
+## Compatibility
+
+- django 1.11: should use `django-painless-redirects<0.3.6` (not supported anyway since april 2020)
+
+
 ## Usage
 
 Add and manage your redirects in the django admin panel, under "painless redirects" > "redirects".
@@ -55,6 +60,7 @@ Add and manage your redirects in the django admin panel, under "painless redirec
 
 ## Settings
 
+- `PAINLESS_REDIRECTS_INDEXED_CHARFIELD_MAX_LENGTH (default: 800)` - needed for mysql (set to ~255). forces you to add `'painless_redirects'` to `settings.MIGRATION_MODULES`
 - `PAINLESS_REDIRECTS_AUTO_CREATE (default: True)` - auto create redirects when a 404 is encountered
 - `PAINLESS_REDIRECTS_AUTO_CREATE_ENABLED (default: False)` - should auto created redirects be enabled instantly? beware, enabling this feature might ruin your SEO, but could also be a real timesaver...
 - `PAINLESS_REDIRECTS_AUTO_CREATE_TO_PATH (default: '/')` - where to redirect to, when a 404 is auto created

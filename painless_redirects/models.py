@@ -22,6 +22,23 @@ REDIRECT_TYPE_CHOICES = (
 
 
 @python_2_unicode_compatible
+class RedirectHit(models.Model):
+    redirect = models.ForeignKey(
+        'painless_redirects.Redirect',
+        on_delete=models.CASCADE,
+    )
+    referrer = models.CharField(
+        _(u'Referrer'),
+        # check https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+        max_length=conf.INDEXED_CHARFIELD_MAX_LENGTH,
+        help_text=_("Where the hit comes from")
+    )
+    hits = models.PositiveIntegerField(
+        default=0,
+        editable=False,
+    )
+
+@python_2_unicode_compatible
 class Redirect(models.Model):
     enabled = models.BooleanField(
         default=True,
@@ -48,7 +65,7 @@ class Redirect(models.Model):
     old_path = models.CharField(
         _(u'From path'),
         # check https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
-        max_length=conf.PAINLESS_REDIRECTS_OLD_PATH_MAX_LENGTH,
+        max_length=conf.INDEXED_CHARFIELD_MAX_LENGTH,
         help_text=_("Absolute path, excluding the domain name. Example: '/events/search/'")
     )
     wildcard_match = models.BooleanField(
