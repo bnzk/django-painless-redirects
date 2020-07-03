@@ -1,7 +1,7 @@
 # dont change any files besides CHANGELOG.txt and __init__.py during procedure.
 
 # got to release branch
-git checkout master
+git checkout release
 # make sure we're up to date
 git pull ; git pull upstream
 # merge
