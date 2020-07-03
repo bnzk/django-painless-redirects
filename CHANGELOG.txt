@@ -1,6 +1,11 @@
 === (ongoing) ===
 - contrib packages that add redirects automagically
 - better support and test multilingual middleware (#19)
+- configure mysql max_length problem for old_path!
+
+
+=== 0.3.7 (2020-07-03) ===
+- integrity error fix (when auto creation was enabled)
 
 
 === 0.3.6 (2020-06-22) ===
