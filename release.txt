@@ -1,15 +1,16 @@
 # dont change any files besides CHANGELOG.txt and __init__.py during procedure.
 
+# version bump in painless_redirects/__init__.py
+# last chance for changelog
+git commit -am'x.x.x'
+git tag x.x.x
+
 # got to release branch
 git checkout release
 # make sure we're up to date
 git pull ; git pull upstream
 # merge
 git merge develop
-# version bump in painless_redirects/__init__.py
-# last chance for changelog
-git commit -am'x.x.x'
-git tag x.x.x
 
 # push & build
 git push --all; git push --tags
@@ -23,6 +24,8 @@ twine upload dist/* -r pypi
 git checkout develop
 
 # version bump to x.x.xDEV
+
+
 
 
 # git flow release start xxxx
