@@ -7,7 +7,7 @@ from django.utils.encoding import force_text
 from django.utils.http import urlquote
 from django.contrib.sites.models import Site
 
-from .models import Redirect
+from .models import Redirect, RedirectHit
 from . import conf
 
 
@@ -80,15 +80,20 @@ class ManualRedirectMiddleware(object):
         if host == current_site.domain:
             return None
         # match?
-        redirect = Redirect.objects.filter(enabled=True, domain=host, old_path=request.path)
+        redirects = Redirect.objects.filter(enabled=True, domain=host, old_path=request.path)
         # only domain. redirect anyway!
-        if not redirect.count():
-            redirect = Redirect.objects.filter(enabled=True, domain=host)
-        if redirect.count():
-            new_uri = redirect[0].redirect_value(request.scheme)
+        if not redirects.count():
+            redirects = Redirect.objects.filter(enabled=True, domain=host)
+        if redirects.count():
+            new_uri = redirects[0].redirect_value(request.scheme)
             # hits
-            redirect[0].hits += 1
-            redirect[0].save()
+            # redirect[0].hits += 1
+            # redirect[0].save()
+            referer = request.META.get('HTTP_REFERER', conf.REFERER_NONE_VALUE)
+            for redirect in redirects:
+                hit , created = RedirectHit.objects.get_or_create(referer=referer, redirect=redirect)
+                hit.hits += 1
+                hit.save()
             return http.HttpResponsePermanentRedirect(new_uri)
 
     def process_response(self, request, response):
@@ -139,10 +144,15 @@ class ManualRedirectMiddleware(object):
             if conf.AUTO_CREATE_ENABLED:
                 redirects_all = [r]
         if len(redirects_all):
-            for r in redirects_all:
+            referer = request.META.get('HTTP_REFERER', conf.REFERER_NONE_VALUE)
+            for redirect in redirects_all:
                 # hits
-                r.hits += 1
-                r.save()
+                # r.hits += 1
+                # r.save()
+                hit, created = RedirectHit.objects.get_or_create(referer=referer, redirect=redirect)
+                hit.hits += 1
+                hit.save()
+
         if len(redirects_enabled):
             r = redirects_enabled[0]
             new_uri = r.redirect_value(
@@ -161,7 +171,10 @@ class ManualRedirectMiddleware(object):
         right_path = ""
         # wildcard match
         if not redirect.count():
-            remaining_path, rubbish = path.rsplit("/", 1)
+            if path.endswith('/'):
+                remaining_path, rubbish = path.rsplit("/", 1)
+            else:
+                remaining_path = path
             while remaining_path:
                 redirect = Redirect.objects.filter(
                     old_path=remaining_path + "/", wildcard_match=True, **kwargs)

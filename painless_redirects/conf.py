@@ -22,6 +22,11 @@ AUTO_CREATE = getattr(
     settings, 'PAINLESS_REDIRECTS_AUTO_CREATE', True
 )
 
+# auto create redirect to / when a 404 is detected
+REFERER_NONE_VALUE = getattr(
+    settings, 'PAINLESS_REDIRECTS_REFERER_NONE_VALUE', '(no referer)'
+)
+
 # default url for created urls
 AUTO_CREATE_TO_PATH = getattr(
     settings, 'PAINLESS_REDIRECTS_AUTO_CREATE_TO_PATH', '/'

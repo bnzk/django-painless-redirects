@@ -10,7 +10,7 @@ from .models import Redirect
 @admin.register(Redirect)
 class RedirectAdmin(admin.ModelAdmin):
     search_fields = ['old_path', 'domain', 'new_path', ]
-    list_display = ('__str__', 'hits', 'enabled', 'auto_created',)
+    list_display = ('__str__', 'total_hits', 'enabled', 'auto_created',)
     list_filter = [
         'enabled',
         'auto_created',
@@ -19,7 +19,7 @@ class RedirectAdmin(admin.ModelAdmin):
         'new_site',
         'domain',
     ]
-    readonly_fields = ['auto_created', 'hits', ]
+    readonly_fields = ['auto_created', 'total_hits', ]
     fieldsets = (
         ('', {
             'fields': (('enabled', 'auto_created', 'hits', ), ),

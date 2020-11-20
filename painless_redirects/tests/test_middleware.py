@@ -83,6 +83,10 @@ class ManualRedirectMiddlewareTestCase(TestCase):
             name="example site 1",
             domain="example1.com",
         )
+        self.site2 = Site.objects.create(
+            name="example site 2",
+            domain="example2.com",
+        )
 
     def _setup_request_response_middleware(self):
         self.middleware = ManualRedirectMiddleware()
@@ -261,6 +265,15 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 301)
         self.assertEqual(response.url, "/the-new-path/the/right/part/")
+        # must work with site too
+        # self.redirect.site = self.site
+        self.redirect.save()
+        self._setup_request_response_middleware()  # re-init
+        self.response.status_code = 404
+        self.request.path = "%sthe/right/part/2" % self.redirect.old_path
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.url, "/the-new-path/the/right/part/2")
 
     def test_wildcard_redirect_with_site(self):
         self.redirect.site = Site.objects.get_current()

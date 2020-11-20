@@ -27,19 +27,28 @@ class RedirectHit(models.Model):
         'painless_redirects.Redirect',
         on_delete=models.CASCADE,
     )
-    referrer = models.CharField(
-        _(u'Referrer'),
+    referer = models.CharField(
+        _(u'Referer'),
         # check https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
         max_length=conf.INDEXED_CHARFIELD_MAX_LENGTH,
-        help_text=_("Where the hit comes from")
+        help_text=_("Where the hit comes from (ie refering url")
     )
     hits = models.PositiveIntegerField(
         default=0,
         editable=False,
     )
+    last_hit = models.DateTimeField(
+        blank=True,
+        null=True,
+        auto_now=True,
+        help_text='The last time the URL/Redirect was hit, from this referrer.'
+    )
+
+    class Meta:
+        ordering = ('-hits',)
 
     def __str__(self):
-        return '{} from {}'.format(self.count, self.referrer)
+        return '{} from {}'.format(self.count, self.referer)
 
 
 @python_2_unicode_compatible
@@ -53,10 +62,6 @@ class Redirect(models.Model):
         default=False,
         verbose_name=_(u'Auto created'),
         help_text=_("Created by a 404 hit? (must be enabled via settings)"),
-        editable=False,
-    )
-    hits = models.IntegerField(
-        default=0,
         editable=False,
     )
     permanent = models.BooleanField(
@@ -83,7 +88,7 @@ class Redirect(models.Model):
     #     default=False,
     #     verbose_name=_(u'Querystring match'),
     #     help_text=_('Considers ?search=whatever when mathing)'),
-    # )
+    # )total_hits
     site = models.ForeignKey(
         Site,
         null=True,
@@ -140,6 +145,10 @@ class Redirect(models.Model):
         if querystring and self.keep_querystring:
             url = '{}?{}'.format(url, querystring)
         return url
+
+    @property
+    def total_hits(self):
+        return 99
 
     def __str__(self):
         wildcard = "*" if self.wildcard_match else ""
