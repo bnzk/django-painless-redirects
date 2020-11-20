@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
-max_length_default = 800
+max_length_default = 1200
 
 # auto create redirect to / when a 404 is detected
 INDEXED_CHARFIELD_MAX_LENGTH = getattr(

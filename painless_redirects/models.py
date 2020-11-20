@@ -70,6 +70,7 @@ class Redirect(models.Model):
         _(u'From path'),
         # check https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
         max_length=conf.INDEXED_CHARFIELD_MAX_LENGTH,
+        db_index=True,
         help_text=_("Absolute path, excluding the domain name. Example: '/events/search/'")
     )
     wildcard_match = models.BooleanField(
