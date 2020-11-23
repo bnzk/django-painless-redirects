@@ -103,6 +103,7 @@ class ManualRedirectMiddleware(object):
         if response.status_code != 404:
             # No need to check for a redirect for non-404 responses.
             return response
+        # prepare basics
         host = request.get_host()
         current_site = Site.objects.get_current()
         current_path = force_text(request.path)
@@ -110,22 +111,28 @@ class ManualRedirectMiddleware(object):
         if querystring:
             current_path += '?' + force_text(querystring)
         current_path = current_path[:conf.INDEXED_CHARFIELD_MAX_LENGTH]
-        # path and domain!
+
+        # path and domain
         redirects_all, right_path = self._check_for_redirect(current_path, **{'domain': host, })
         redirects_enabled = redirects_all.filter(enabled=True)
         redirects_all = list(redirects_all)
-        # exact match of path and site.
+
+        # exact match of path and site (and no domain)
         kwargs = {'site': current_site, 'domain': '', }
-        more_redirects_all, right_path = self._check_for_redirect(current_path, **kwargs)
+        more_redirects_all, more_right_path = self._check_for_redirect(current_path, **kwargs)
         if not redirects_enabled.count():
             redirects_enabled = more_redirects_all.enabled()
+            right_path = more_right_path
         redirects_all += list(more_redirects_all)
+
         # exact path match
         kwargs = {'site': None, 'domain': '', }
-        more_redirects_all, right_path = self._check_for_redirect(current_path, **kwargs)
+        more_redirects_all, more_right_path = self._check_for_redirect(current_path, **kwargs)
         if not redirects_enabled.count():
             redirects_enabled = more_redirects_all.enabled()
+            right_path = more_right_path
         redirects_all += list(more_redirects_all)
+
         # not one redirect found > create auto redirect!?
         if not len(redirects_all) and conf.AUTO_CREATE:
             the_site = current_site if conf.AUTO_CREATE_SITE else None
@@ -167,6 +174,9 @@ class ManualRedirectMiddleware(object):
         return response
 
     def _check_for_redirect(self, path, **kwargs):
+        """
+        check for a redirect, including wildcard mathching
+        """
         redirect = Redirect.objects.filter(old_path=path, **kwargs)
         right_path = ""
         # wildcard match
@@ -175,13 +185,25 @@ class ManualRedirectMiddleware(object):
                 remaining_path, rubbish = path.rsplit("/", 1)
             else:
                 remaining_path = path
+            # print(right_path)
             while remaining_path:
                 redirect = Redirect.objects.filter(
-                    old_path=remaining_path + "/", wildcard_match=True, **kwargs)
+                    old_path=remaining_path + "/", wildcard_match=True, **kwargs
+                )
                 if redirect.count():
+                    # TODO:  hit counting is not correct like this!
+                    if path.endswith('/'):
+                        right_path += "/"
                     break
-                remaining_path, right_side = remaining_path.rsplit("/", 1)
-                right_path = '%s/%s' % (right_side, right_path)
+                remaining_path, right_side_split_off = remaining_path.rsplit("/", 1)
+                # print("right_path")
+                # print(right_path)
+                # print(right_side_split_off)
+                # print(remaining_path)
+                if right_path:
+                    right_path = '%s/%s' % (right_side_split_off, right_path)
+                else:
+                    right_path = right_side_split_off
             # print("---")
             # print(remaining_path)
             # print(right_path)
