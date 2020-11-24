@@ -19,6 +19,9 @@ DATABASES = {
     }
 }
 
+LANGUAGE_CODE = 'en'
+LANGUAGES =  ['en', 'fr', 'de']
+
 ROOT_URLCONF = 'painless_redirects.tests.urls'
 
 STATIC_URL = '/static/'
