@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.sites.models import Site
 from django.db.models import Count, Sum
+from django.template.defaultfilters import truncatechars
 from django.utils.translation import ugettext_lazy as _
 
 from painless_redirects import conf
@@ -165,5 +166,5 @@ class Redirect(models.Model):
             )
         else:
             return "%s%s%s ---> %s" % (
-                getattr(self.site, "domain", ""), self.old_path, wildcard, self.redirect_value('http')
+                getattr(self.site, "domain", ""), truncatechars(self.old_path, 60), wildcard, self.redirect_value('http')
             )
