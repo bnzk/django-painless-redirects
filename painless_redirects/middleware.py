@@ -148,14 +148,15 @@ class ManualRedirectMiddleware(object):
                 r.new_path = conf.AUTO_CREATE_TO_PATH
                 r.enabled = conf.AUTO_CREATE_ENABLED
                 r.save()
-            if conf.AUTO_CREATE_ENABLED:
-                redirects_all = [r]
+            redirects_all = [r]
+            # if conf.AUTO_CREATE_ENABLED:
         if len(redirects_all):
             referer = request.META.get('HTTP_REFERER', conf.REFERER_NONE_VALUE)
             for redirect in redirects_all:
                 # hits
                 # r.hits += 1
                 # r.save()
+                print("has, update hits!")
                 hit, created = RedirectHit.objects.get_or_create(referer=referer, redirect=redirect)
                 hit.hits += 1
                 hit.save()

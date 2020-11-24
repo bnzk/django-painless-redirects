@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.sites.models import Site
+from django.db.models import Count, Sum
 from django.utils.translation import ugettext_lazy as _
 
 from painless_redirects import conf
@@ -48,7 +49,7 @@ class RedirectHit(models.Model):
         ordering = ('-hits',)
 
     def __str__(self):
-        return '{} from {}'.format(self.count, self.referer)
+        return '{}x from {}'.format(self.hits, self.referer)
 
 
 @python_2_unicode_compatible
@@ -57,6 +58,11 @@ class Redirect(models.Model):
         default=True,
         verbose_name=_(u'Enabled'),
         help_text=_("Shall this redirect be effectivly used?"),
+    )
+    ignored = models.BooleanField(
+        default=False,
+        verbose_name=_(u'Ignored'),
+        help_text=_("Shall this redirect be ignored? (use to tighen/cleanup your redirects list)"),
     )
     auto_created = models.BooleanField(
         default=False,
@@ -146,9 +152,10 @@ class Redirect(models.Model):
             url = '{}?{}'.format(url, querystring)
         return url
 
-    @property
     def total_hits(self):
-        return 99
+        qs = self.redirecthit_set.all().aggregate(total_hits=Sum('hits'))
+        return qs['total_hits']
+    total_hits.admin_order_field = 'total_hits'
 
     def __str__(self):
         wildcard = "*" if self.wildcard_match else ""
