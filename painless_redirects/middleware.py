@@ -79,7 +79,7 @@ class ManualRedirectMiddleware(object):
         current_site = Site.objects.get_current()
         if host == current_site.domain:
             return None
-        # match?
+        # TODO: refactor with _check_redirect!
         redirects = Redirect.objects.filter(enabled=True, domain=host, old_path=request.path)
         # only domain. redirect anyway!
         if not redirects.count():

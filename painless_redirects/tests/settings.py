@@ -84,12 +84,13 @@ INTERNAL_APPS = [
 
 # MIDDLEWARE_CLASSES = [
 MIDDLEWARE = [
+    "painless_redirects.middleware.ManualRedirectMiddleware",
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    "painless_redirects.middleware.ManualRedirectMiddleware",
     "painless_redirects.middleware.ForceSiteDomainRedirectMiddleware",
 ]
 
