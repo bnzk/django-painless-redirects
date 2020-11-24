@@ -50,6 +50,7 @@ class RedirectAdmin(admin.ModelAdmin):
         'set_ignored',
         'remove_disabled_auto_created',
         'remove_all_auto_created',
+        'remove_all_ignored',
     ]
 
     # def get_sortable_by(self, request):
@@ -84,3 +85,7 @@ class RedirectAdmin(admin.ModelAdmin):
     def remove_all_auto_created(self, request, queryset):
         Redirect.objects.filter(auto_created=True, ).delete()
     remove_all_auto_created.short_description = "Remove all auto created"
+
+    def remove_all_ignored(self, request, queryset):
+        Redirect.objects.filter(ignored=True, ).delete()
+    remove_all_ignored.short_description = "Remove all ignored"
