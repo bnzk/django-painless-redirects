@@ -154,9 +154,6 @@ class ManualRedirectMiddleware(object):
             referer = request.META.get('HTTP_REFERER', conf.REFERER_NONE_VALUE)
             for redirect in redirects_all:
                 # hits
-                # r.hits += 1
-                # r.save()
-                print("has, update hits!")
                 hit, created = RedirectHit.objects.get_or_create(referer=referer, redirect=redirect)
                 hit.hits += 1
                 hit.save()

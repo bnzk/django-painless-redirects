@@ -142,11 +142,11 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, "/the-new-path/")
         self.redirect.refresh_from_db()
-        self.assertEqual(self.redirect.hits, 1)
+        self.assertEqual(self.redirect.total_hits(), 1)
         self.middleware.process_response(self.request, self.response)
         self.middleware.process_response(self.request, self.response)
         self.redirect.refresh_from_db()
-        self.assertEqual(self.redirect.hits, 3)
+        self.assertEqual(self.redirect.total_hits(), 3)
 
     def test_redirect_not_enabled(self):
         reload(conf)
@@ -158,11 +158,11 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(response.status_code, 404)
         self.redirect.refresh_from_db()
-        self.assertEqual(self.redirect.hits, 1)
+        self.assertEqual(self.redirect.total_hits(), 1)
         self.middleware.process_response(self.request, self.response)
         self.middleware.process_response(self.request, self.response)
         self.redirect.refresh_from_db()
-        self.assertEqual(self.redirect.hits, 3)
+        self.assertEqual(self.redirect.total_hits(), 3)
 
     def test_simple_redirect_keep_querystring(self):
         self.response.status_code = 404
