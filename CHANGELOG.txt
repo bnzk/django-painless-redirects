@@ -1,7 +1,15 @@
 === (ongoing) ===
 - contrib packages that add redirects automagically
-- better support and test multilingual middleware (#19)
 - configure mysql max_length problem for old_path!
+
+- better support and test multilingual middleware (#19)
+- better testing for wildcard matches with site enabled (right_path bug!)
+
+
+=== 0.4.0 (2020-11-XX?) ===
+- not a breaking, but loosing content change: hit counting changed (all hits will be reset to 0!)
+- hit counting changed, now by referer, for a better overview
+- bug fixes.
 
 
 === 0.3.7 (2020-07-03) ===
