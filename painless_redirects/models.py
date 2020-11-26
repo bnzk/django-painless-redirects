@@ -5,6 +5,8 @@ from django.db import models
 from django.contrib.sites.models import Site
 from django.db.models import Count, Sum
 from django.template.defaultfilters import truncatechars
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
 from painless_redirects import conf
@@ -158,13 +160,63 @@ class Redirect(models.Model):
         return qs['total_hits']
     total_hits.admin_order_field = 'total_hits'
 
-    def __str__(self):
-        wildcard = "*" if self.wildcard_match else ""
+    def old_loc_display_data(self):
+        path = truncatechars(self.old_path, 50)
         if self.domain:
-            return "%s%s%s ---> %s " % (
-                self.domain, self.old_path, wildcard, self.redirect_value('http')
+            loc = "%s%s" % (
+                self.domain, path
             )
+            loc_link = loc
+            if not self.domain.startswith('http'):
+                loc_link = 'http://{}'.format(loc)
         else:
-            return "%s%s%s ---> %s" % (
-                getattr(self.site, "domain", ""), truncatechars(self.old_path, 60), wildcard, self.redirect_value('http')
+            loc = "%s%s" % (
+                getattr(self.site, "domain", ""), path
             )
+            loc_link = loc
+            if getattr(self.site, "domain", None):
+                loc_link = 'http://{}'.format(loc)
+        if self.wildcard_match:
+            loc += "*"
+        return loc, loc_link
+
+    def old_loc(self):
+        loc, loc_link = self.old_loc_display_data()
+        loc = '<a href="{link}" target="_blank">{loc}</a> (<a href="{edit_link}">edit</a>)'.format(
+            **{
+                'loc': loc,
+                'link': loc_link,
+                'edit_link': reverse('admin:painless_redirects_redirect_change', args=(self.id, ), ),
+            }
+        )
+        return mark_safe(loc)
+    old_loc.short_description = 'From'
+
+    def new_loc_display_data(self):
+        loc = self.redirect_value('http')
+        loc_link = loc
+        # redirect_value has http covered
+        # if getattr(self.new_site, "domain", None):
+        #     loc_link = 'http://{}'.format(loc)
+        if self.keep_tree:
+            loc += '/' if not loc.endswith('/') else ''
+            loc += "keep-wildcard/"
+        if self.keep_querystring:
+            loc += "?keep=query"
+        return loc, loc_link
+
+    def new_loc(self):
+        loc, loc_link = self.new_loc_display_data()
+        loc = '<a href="{link}" target="_blank">{loc}</a>'.format(
+            **{
+                'loc': loc,
+                'link': loc_link,
+            }
+        )
+        return mark_safe(loc)
+    new_loc.short_description = 'To'
+
+    def __str__(self):
+        old_loc, old_loc_link = self.old_loc_display_data()
+        new_loc, new_loc_link = self.new_loc_display_data()
+        return '{} ---> {}'.format(old_loc, new_loc)

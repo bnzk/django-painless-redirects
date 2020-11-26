@@ -22,7 +22,8 @@ class RedirectHitInline(admin.TabularInline):
 @admin.register(Redirect)
 class RedirectAdmin(admin.ModelAdmin):
     search_fields = ['old_path', 'domain', 'new_path', ]
-    list_display = ('__str__', 'total_hits', 'enabled', 'auto_created', 'ignored', )
+    list_display_links = []
+    list_display = ('old_loc', 'new_loc', 'total_hits', 'enabled', 'auto_created', 'ignored', )
     list_filter = [
         'enabled',
         'auto_created',
