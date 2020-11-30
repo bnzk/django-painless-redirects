@@ -38,12 +38,16 @@ Add ``painless_redirects`` to your ``INSTALLED_APPS``
         'painless_redirects',
     )
 
-Add the following middlware to MIDDLEWARE, to make basic manual redirects work.
+Add the following middlware to MIDDLEWARE, to make basic manual redirects work. 
 
     painless_redirects.middleware.ManualRedirectMiddleware
 
+Add it at the top, or at least before the django local middleware, or other middlewares, that do redirects,
+as for example the `CommonMiddleware`, that will do an add slash, if configured so. This is especially important
+if you'll use the auto creation feature, so no false positives end up in the redirects.
+
 If you want to always redirect to the domain name entered in your current site (django.contrib.sites must be installed),
-also add this middleware:
+also add this middleware (position is not that important):
 
     painless_redirects.middleware.ForceSiteDomainRedirectMiddleware
 
@@ -55,7 +59,8 @@ also add this middleware:
 
 ## Usage
 
-Add and manage your redirects in the django admin panel, under "painless redirects" > "redirects".
+Add and manage your redirects in the django admin panel, under "painless redirects" > "redirects". Check hits, 
+check auto created redirects, enable them if needed.
 
 
 ## Settings

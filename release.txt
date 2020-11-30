@@ -1,5 +1,11 @@
 # dont change any files besides CHANGELOG.txt and __init__.py during procedure.
 
+# update everything
+git checkout release
+# make sure we're up to date
+git pull ; git pull upstream
+git checkout develop
+
 # version bump in painless_redirects/__init__.py
 # last chance for changelog
 git commit -am'x.x.x'
