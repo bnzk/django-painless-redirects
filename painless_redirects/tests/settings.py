@@ -20,7 +20,11 @@ DATABASES = {
 }
 
 LANGUAGE_CODE = 'en'
-LANGUAGES =  ['en', 'fr', 'de']
+LANGUAGES =  [
+    ('en', 'en'),
+    ('fr', 'fr'),
+    ('de', 'de'),
+]
 
 ROOT_URLCONF = 'painless_redirects.tests.urls'
 
