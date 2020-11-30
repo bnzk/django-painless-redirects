@@ -10,13 +10,13 @@ git merge release
 
 # version bump in painless_redirects/__init__.py
 # last chance for changelog
-git commit -am'x.x.x'
-git tag x.x.x
+git commit -am'x.x.x release'
 
 # got to release branch
 git checkout release
 # merge
 git merge develop
+git tag x.x.x
 
 # push & build
 git push --all; git push --tags
