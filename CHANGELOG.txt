@@ -6,7 +6,7 @@
 - better testing for wildcard matches with site enabled (right_path bug!)
 
 
-=== 0.4.0 (2020-11-XX?) ===
+=== 0.4.0 (2020-11-30) ===
 - not a breaking, but loosing content change: hit counting changed (all hits will be reset to 0!)
 - hit counting changed, now by referer, for a better overview
 - bug fixes.

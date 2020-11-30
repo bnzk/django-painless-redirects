@@ -5,6 +5,7 @@ git checkout release
 # make sure we're up to date
 git pull ; git pull upstream
 git checkout develop
+# merge release changes
 git merge release
 
 # version bump in painless_redirects/__init__.py
@@ -14,8 +15,6 @@ git tag x.x.x
 
 # got to release branch
 git checkout release
-# make sure we're up to date
-git pull ; git pull upstream
 # merge
 git merge develop
 
