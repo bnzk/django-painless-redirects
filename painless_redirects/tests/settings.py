@@ -20,7 +20,7 @@ DATABASES = {
 }
 
 LANGUAGE_CODE = 'en'
-LANGUAGES =  [
+LANGUAGES = [
     ('en', 'en'),
     ('fr', 'fr'),
     ('de', 'de'),
