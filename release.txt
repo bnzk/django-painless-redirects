@@ -5,6 +5,7 @@ git checkout release
 # make sure we're up to date
 git pull ; git pull upstream
 git checkout develop
+git merge release
 
 # version bump in painless_redirects/__init__.py
 # last chance for changelog
