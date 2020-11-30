@@ -1,9 +1,6 @@
-# coding: utf-8
-from __future__ import unicode_literals
-
 from django.db import models
 from django.contrib.sites.models import Site
-from django.db.models import Count, Sum
+from django.db.models import Sum
 from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils.safestring import mark_safe

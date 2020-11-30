@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Sum
+# from django.db.models import Sum
 
 
 class RedirectQuerySet(models.QuerySet):
