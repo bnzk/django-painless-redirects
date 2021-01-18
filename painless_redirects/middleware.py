@@ -90,6 +90,7 @@ class ManualRedirectMiddleware(object):
             # redirect[0].hits += 1
             # redirect[0].save()
             referer = request.META.get('HTTP_REFERER', conf.REFERER_NONE_VALUE)
+            referer = referer[:conf.INDEXED_CHARFIELD_MAX_LENGTH]
             for redirect in redirects:
                 hit, created = RedirectHit.objects.get_or_create(referer=referer, redirect=redirect)
                 hit.hits += 1
@@ -152,6 +153,7 @@ class ManualRedirectMiddleware(object):
             # if conf.AUTO_CREATE_ENABLED:
         if len(redirects_all):
             referer = request.META.get('HTTP_REFERER', conf.REFERER_NONE_VALUE)
+            referer = referer[:conf.INDEXED_CHARFIELD_MAX_LENGTH]
             for redirect in redirects_all:
                 # hits
                 hit, created = RedirectHit.objects.get_or_create(referer=referer, redirect=redirect)
