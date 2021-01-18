@@ -3,7 +3,7 @@
 # update everything
 git checkout release
 # make sure we're up to date
-git pull ; git pull upstream
+git pull ; git pull upstream release
 git checkout develop
 # merge release changes
 git merge release
@@ -11,12 +11,12 @@ git merge release
 # version bump in painless_redirects/__init__.py
 # last chance for changelog
 git commit -am'x.x.x release'
+git tag x.x.x
 
 # got to release branch
 git checkout release
 # merge
 git merge develop
-git tag x.x.x
 
 # push & build
 git push --all; git push --tags
