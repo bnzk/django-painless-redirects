@@ -1,6 +1,8 @@
 === (ongoing) ===
 - contrib packages that add redirects automagically
 
+- multisite bug! #21
+
 
 === 0.4.1 (2021-01-18) ===
 - configure mysql max_length problem for old_path/referer!
