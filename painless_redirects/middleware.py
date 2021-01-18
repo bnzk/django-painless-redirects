@@ -108,9 +108,10 @@ class ManualRedirectMiddleware(object):
         host = request.get_host()
         current_site = Site.objects.get_current()
         current_path = force_text(request.path)
+        current_path_only = current_path
         querystring = request.META.get('QUERY_STRING', None)
         if querystring:
-            current_path += '?' + force_text(querystring)
+            current_path = '{}?{}'.format(current_path_only, force_text(querystring))
         current_path = current_path[:conf.INDEXED_CHARFIELD_MAX_LENGTH]
 
         # path and domain
@@ -136,21 +137,33 @@ class ManualRedirectMiddleware(object):
 
         # not one redirect found > create auto redirect!?
         if not len(redirects_all) and conf.AUTO_CREATE:
-            the_site = current_site if conf.AUTO_CREATE_SITE else None
-            kwargs = {
-                'old_path': current_path,
-                # site also via settings?
-                'site': the_site,
-                'domain': '',
-            }
-            r, created = Redirect.objects.get_or_create(**kwargs)
-            if created:
-                r.auto_created = True
-                r.new_path = conf.AUTO_CREATE_TO_PATH
-                r.enabled = conf.AUTO_CREATE_ENABLED
-                r.save()
-            redirects_all = [r]
-            # if conf.AUTO_CREATE_ENABLED:
+            create = True
+            if 'django.middleware.locale.LocaleMiddleware' in settings.MIDDLEWARE:
+                # no good: redirect create only if starting with lang_code
+                # for lang_code, lang_label in settings.LANGUAGES:
+                #     if current_path[1:].startswith(lang_code):
+                #         create = True
+                # solutions for now: no redirect create if /
+                if current_path_only == '/':
+                    create = False
+            if not current_path_only.endswith('/') and settings.APPEND_SLASH:
+                create = False
+            if create:
+                the_site = current_site if conf.AUTO_CREATE_SITE else None
+                kwargs = {
+                    'old_path': current_path,
+                    # site also via settings?
+                    'site': the_site,
+                    'domain': '',
+                }
+                r, created = Redirect.objects.get_or_create(**kwargs)
+                if created:
+                    r.auto_created = True
+                    r.new_path = conf.AUTO_CREATE_TO_PATH
+                    r.enabled = conf.AUTO_CREATE_ENABLED
+                    r.save()
+                redirects_all = [r]
+                # if conf.AUTO_CREATE_ENABLED:
         if len(redirects_all):
             referer = request.META.get('HTTP_REFERER', conf.REFERER_NONE_VALUE)
             referer = referer[:conf.INDEXED_CHARFIELD_MAX_LENGTH]

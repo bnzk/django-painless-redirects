@@ -328,10 +328,44 @@ class ManualRedirectMiddlewareTestCase(TestCase):
         for c in range(0, conf.INDEXED_CHARFIELD_MAX_LENGTH):
             very_long += 'ccccc'
         self.assertGreater(len(very_long), conf.INDEXED_CHARFIELD_MAX_LENGTH)
-        self.request.path = very_long
+        self.request.path = very_long + "/"
         # check for false positives!
         self.response.status_code = 404
         response = self.middleware.process_response(self.request, self.response)
         self.assertEqual(404, response.status_code)
         self.assertEqual(2, Redirect.objects.all().count())
         self.assertEqual(conf.INDEXED_CHARFIELD_MAX_LENGTH, len(Redirect.objects.all()[0].old_path))
+
+    @auto_create
+    def test_auto_create_with_locale_middleware(self):
+        # will be redirected to /en/' by locale middleware later on!
+        self.request.path = '/?test'
+        self.response.status_code = 404
+        self.assertEqual(Redirect.objects.all().count(), 1)
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(Redirect.objects.all().count(), 1)
+
+        # 404 with lang slug > auto create ok!
+        self.response.status_code = 404
+        self.request.path = '/nothing-yet/'
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(Redirect.objects.all().count(), 2)
+
+    @auto_create
+    def test_auto_create_respect_append_slash(self):
+        # will be redirected to /nope/' by locale commonmiddleware later on!
+        self.request.path = '/nope'
+        self.response.status_code = 404
+        self.assertEqual(Redirect.objects.all().count(), 1)
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(Redirect.objects.all().count(), 1)
+
+        # 404 with lang slug > auto create ok!
+        self.response.status_code = 404
+        self.request.path = '/nothing-yet/'
+        response = self.middleware.process_response(self.request, self.response)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(Redirect.objects.all().count(), 2)

@@ -1,9 +1,12 @@
 === (ongoing) ===
 - contrib packages that add redirects automagically
-- configure mysql max_length problem for old_path!
 
+
+=== 0.4.1 (2021-01-18) ===
+- configure mysql max_length problem for old_path/referer!
 - better support and test multilingual middleware (#19)
 - better testing for wildcard matches with site enabled (right_path bug!)
+- docs updated (middleware order)
 
 
 === 0.4.0 (2020-11-30) ===

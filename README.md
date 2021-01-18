@@ -20,7 +20,6 @@ like django.contrib.redirects, on steroids. maybe.
 
 Yet to be done:
 
-- APPEND_SLASH handling (when trying to redirect /whatever/was-here.html)
 - decide if to include GET vars when matching a redirect
 - contrib packages with "magic" redirects for django-cms, django-filer -> SEO getting easy.
 
@@ -42,9 +41,11 @@ Add the following middlware to MIDDLEWARE, to make basic manual redirects work.
 
     painless_redirects.middleware.ManualRedirectMiddleware
 
-Add it at the top, or at least before the django local middleware, or other middlewares, that do redirects,
-as for example the `CommonMiddleware`, that will do an add slash, if configured so. This is especially important
-if you'll use the auto creation feature, so no false positives end up in the redirects.
+As a rule of thumb, you'll add the middleware rather at the end of the list. If
+you add it more at the beginning, other redirecting middlewares will 
+get priority - for example, you'll not be able to redirect any path 
+without having a language slug first, when LocaleMiddleware is before 
+our middleware.
 
 If you want to always redirect to the domain name entered in your current site (django.contrib.sites must be installed),
 also add this middleware (position is not that important):
