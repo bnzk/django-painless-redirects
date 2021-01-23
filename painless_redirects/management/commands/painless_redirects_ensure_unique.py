@@ -19,5 +19,3 @@ class Command(BaseCommand):
             else:
                 if hit.referer in redirects_referers[hit.redirect.id]:
                     print("found duplicate: {} / {}".format(hit.redirect, hit.referer))
-        print(redirects)
-        print(redirects_referers)
