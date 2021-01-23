@@ -42,7 +42,7 @@ class RedirectHit(models.Model):
         blank=True,
         null=True,
         auto_now=True,
-        help_text='The last time the URL/Redirect was hit, from this referrer.'
+        help_text='The last time the URL/Redirect was hit, from this referer.'
     )
 
     class Meta:
