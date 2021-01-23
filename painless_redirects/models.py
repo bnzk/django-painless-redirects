@@ -47,6 +47,7 @@ class RedirectHit(models.Model):
 
     class Meta:
         ordering = ('-hits',)
+        unique_together = ('redirect', 'referer')
 
     def __str__(self):
         return '{}x from {}'.format(self.hits, self.referer)
