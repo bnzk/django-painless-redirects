@@ -5,7 +5,7 @@ from painless_redirects.models import RedirectHit
 
 
 class Command(BaseCommand):
-    help = 'Ensure uniqueness on RedirectHit.referer/redirect'
+    help = 'Ensure uniqueness on RedirectHit.referer/redirect. Use if migration 0015 fails.'
 
     def handle(self, *args, **options):
         qs = RedirectHit.objects.all()
@@ -19,3 +19,4 @@ class Command(BaseCommand):
             else:
                 if hit.referer in redirects_referers[hit.redirect.id]:
                     print("found duplicate: {} / {}".format(hit.redirect, hit.referer))
+                    hit.delete()

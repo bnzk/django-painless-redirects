@@ -180,12 +180,11 @@ class Redirect(models.Model):
 
     def old_loc(self):
         loc, loc_link = self.old_loc_display_data()
-        loc = '<a href="{link}" target="_blank">{loc}</a> (<a href="{edit_link}">edit</a>)'.format(
-            **{
-                'loc': loc,
-                'link': loc_link,
-                'edit_link': reverse('admin:painless_redirects_redirect_change', args=(self.id, ), ),
-            }
+        loc = format_html(
+            '<a href="{}" target="_blank">{}</a> (<a href="{}">edit</a>)',
+            loc_link,
+            loc,
+            reverse('admin:painless_redirects_redirect_change', args=(self.id, ), ),
         )
         return mark_safe(loc)
     old_loc.short_description = 'From'
@@ -205,11 +204,10 @@ class Redirect(models.Model):
 
     def new_loc(self):
         loc, loc_link = self.new_loc_display_data()
-        loc = '<a href="{link}" target="_blank">{loc}</a>'.format(
-            **{
-                'loc': loc,
-                'link': loc_link,
-            }
+        loc = format_html(
+            '<a href="{}" target="_blank">{}</a>',
+            loc_link,
+            loc,
         )
         return mark_safe(loc)
     new_loc.short_description = 'To'
