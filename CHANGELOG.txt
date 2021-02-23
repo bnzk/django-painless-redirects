@@ -2,7 +2,8 @@
 - contrib packages that add redirects automagically
 
 
-=== 0.4.2 (2021-02-23) ===
+=== 0.4.2 (2021-02-XX) ===
+- changed CI from travis to github actions
 - race condition bug #22 (#21)
 - managemenet command to eliminiate duplicate redirecthits (that would violate the new `unique_together` constraint)
 
