@@ -12,7 +12,7 @@ class Command(BaseCommand):
         redirects = []
         redirects_referers = {}
         for hit in qs:
-            if not hit.redirect in redirects:
+            if hit.redirect not in redirects:
                 redirects.append(hit.redirect)
                 redirects_referers[hit.redirect.id] = []
                 redirects_referers[hit.redirect.id].append(hit.referer)
