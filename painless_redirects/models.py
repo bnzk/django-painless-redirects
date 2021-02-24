@@ -4,6 +4,7 @@ from django.db.models import Sum
 from django.template.defaultfilters import truncatechars
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 
 from painless_redirects import conf
