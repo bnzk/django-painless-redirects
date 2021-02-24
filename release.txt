@@ -1,5 +1,29 @@
 # dont change any files besides CHANGELOG.txt and __init__.py during procedure.
 
+### V2: no git flow, main branch pushes trigger github actions
+
+# update everything
+git checkout main
+# make sure we're up to date
+git pull ; git pull upstream release
+git checkout develop
+# merge release changes
+git merge release
+
+# version bump in painless_redirects/__init__.py
+# last chance for changelog
+git commit -am'x.x.x release'
+git tag x.x.x
+
+# got to release branch
+git checkout release
+# merge
+git merge develop
+
+
+
+### V1: NO git flow, manual publishing
+
 # update everything
 git checkout release
 # make sure we're up to date
@@ -32,7 +56,7 @@ git checkout develop
 # version bump to x.x.xDEV
 
 
-
+### V0: git flow, manual publishing
 
 # git flow release start xxxx
 # version bump in painless_redirects/__init__.py
