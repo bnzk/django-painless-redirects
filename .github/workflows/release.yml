@@ -2,9 +2,12 @@ name: Release on PYPI
 on:
   push:
     branches:  [main]
+
+
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    if: github.repository == ‘bnzk/django-painless-redirects’
     steps:
     - name: Checkout
       uses: actions/checkout@v2
