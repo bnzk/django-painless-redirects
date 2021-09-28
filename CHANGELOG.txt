@@ -2,6 +2,11 @@
 - contrib packages that add redirects automagically
 
 
+=== 0.5.0 (2021-09-28) ===
+- compatibility for django 3+
+- basic admin tests, changelist and detail/change view
+
+
 === 0.4.2 (2021-02-24) ===
 - changed CI from travis to github actions
 - race condition bug #22 (#21)
