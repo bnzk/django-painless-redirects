@@ -9,6 +9,8 @@ logging.getLogger("factory").setLevel(logging.WARN)
 
 SITE_ID = 1
 
+ALLOWED_HOSTS = ['*', ]
+
 APP_ROOT = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..'))
 

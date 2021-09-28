@@ -12,7 +12,7 @@ class RedirectHitInline(admin.TabularInline):
     model = RedirectHit
     extra = 0
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return False
 
     def get_readonly_fields(self, request, obj=None):
@@ -66,7 +66,7 @@ class RedirectAdmin(admin.ModelAdmin):
         return qs
 
     # https://stackoverflow.com/a/24799844/1029469
-    def changelist_view(self, request, extra_context=None):
+    def changelist_view(self, request=None, extra_context=None):
         if 'action' in request.POST and request.POST['action'] in self.actions:
             if not request.POST.getlist(admin.ACTION_CHECKBOX_NAME):
                 post = request.POST.copy()
