@@ -74,8 +74,8 @@ class Redirect(models.Model):
     )
     permanent = models.BooleanField(
         default=True,
-        verbose_name=_(u'Permanent redirect (301)'),
-        help_text=_("For temporary fixes, uncheck to use a status code of 302"),
+        verbose_name=_(u'Permanent'),
+        help_text=_("Use status code 301. For temporary fixes, uncheck to use a status code of 302"),
     )
     # max length note: mysql index cannot be more than 307Xbytes, so with utf-8,
     # we can have no more than max_length around 800 for old_path
@@ -160,7 +160,7 @@ class Redirect(models.Model):
     total_hits.admin_order_field = 'total_hits'
 
     def old_loc_display_data(self):
-        path = truncatechars(self.old_path, 50)
+        path = self.old_path
         if self.domain:
             loc = "%s%s" % (
                 self.domain, path
@@ -177,15 +177,15 @@ class Redirect(models.Model):
                 loc_link = 'http://{}'.format(loc)
         if self.wildcard_match:
             loc += "*"
-        return loc, loc_link
+        return truncatechars(loc, 50), loc_link
 
     def old_loc(self):
         loc, loc_link = self.old_loc_display_data()
         loc = format_html(
-            '<a href="{}" target="_blank">{}</a> (<a href="{}">edit</a>)',
-            loc_link,
-            loc,
+            ' <a href="{}">{}</a> (<a href="{}" target="_blank">check</a>)',
             reverse('admin:painless_redirects_redirect_change', args=(self.id, ), ),
+            loc,
+            loc_link,
         )
         return mark_safe(loc)
     old_loc.short_description = 'From'

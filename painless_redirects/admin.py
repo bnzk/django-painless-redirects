@@ -23,12 +23,14 @@ class RedirectHitInline(admin.TabularInline):
 class RedirectAdmin(admin.ModelAdmin):
     search_fields = ['old_path', 'domain', 'new_path', ]
     list_display_links = []
-    list_display = ('old_loc', 'new_loc', 'total_hits', 'enabled', 'auto_created', 'ignored', )
+    list_display = ('old_loc', 'new_path', 'total_hits', 'enabled', 'permanent', 'ignored', 'auto_created',)
+    list_editable = ('enabled', 'ignored', 'new_path', 'permanent')
     list_filter = [
         'enabled',
         'auto_created',
         'wildcard_match',
         'ignored',
+        'permanent',
         'site',
         'new_site',
         'domain',
