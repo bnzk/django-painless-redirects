@@ -1,7 +1,5 @@
-# coding: utf-8
-from __future__ import unicode_literals
-
 from django.contrib import admin
+from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 from django.db.models import Sum
 from django.utils.translation import ugettext_lazy as _
 
@@ -68,10 +66,10 @@ class RedirectAdmin(admin.ModelAdmin):
     # https://stackoverflow.com/a/24799844/1029469
     def changelist_view(self, request, extra_context=None):
         if 'action' in request.POST and request.POST['action'] in self.actions:
-            if not request.POST.getlist(admin.ACTION_CHECKBOX_NAME):
+            if not request.POST.getlist(ACTION_CHECKBOX_NAME):
                 post = request.POST.copy()
                 for u in Redirect.objects.all()[:10]:
-                    post.update({admin.ACTION_CHECKBOX_NAME: str(u.id)})
+                    post.update({ACTION_CHECKBOX_NAME: str(u.id)})
                 request._set_post(post)
         return super().changelist_view(request, extra_context)
 
