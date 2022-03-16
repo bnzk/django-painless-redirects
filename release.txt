@@ -24,6 +24,7 @@ git merge develop
 git push --all; git push --tags
 git push upstream --all; git push upstream --tags
 
+git checkout develop
 
 
 ### V1: NO git flow, manual publishing

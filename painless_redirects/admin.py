@@ -10,7 +10,7 @@ class RedirectHitInline(admin.TabularInline):
     model = RedirectHit
     extra = 0
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return False
 
     def get_readonly_fields(self, request, obj=None):
@@ -21,12 +21,14 @@ class RedirectHitInline(admin.TabularInline):
 class RedirectAdmin(admin.ModelAdmin):
     search_fields = ['old_path', 'domain', 'new_path', ]
     list_display_links = []
-    list_display = ('old_loc', 'new_loc', 'total_hits', 'enabled', 'auto_created', 'ignored', )
+    list_display = ('old_loc', 'new_path', 'total_hits', 'enabled', 'permanent', 'ignored', 'auto_created',)
+    list_editable = ('enabled', 'ignored', 'new_path', 'permanent')
     list_filter = [
         'enabled',
         'auto_created',
         'wildcard_match',
         'ignored',
+        'permanent',
         'site',
         'new_site',
         'domain',
@@ -64,7 +66,7 @@ class RedirectAdmin(admin.ModelAdmin):
         return qs
 
     # https://stackoverflow.com/a/24799844/1029469
-    def changelist_view(self, request, extra_context=None):
+    def changelist_view(self, request=None, extra_context=None):
         if 'action' in request.POST and request.POST['action'] in self.actions:
             if not request.POST.getlist(ACTION_CHECKBOX_NAME):
                 post = request.POST.copy()
