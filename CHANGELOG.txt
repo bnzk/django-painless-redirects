@@ -2,6 +2,10 @@
 - contrib packages that add redirects automagically
 
 
+=== 0.7.0 (2022-03-16) ===
+- compatible with django 3.1+
+
+
 === 0.6.0 (2021-09-28) ===
 - #25 changelist with more djangolistic links, still not satisfied
 - #24 changelist editable. yea.
