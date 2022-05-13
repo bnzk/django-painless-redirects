@@ -2,7 +2,7 @@
 - contrib packages that add redirects automagically
 
 
-=== 0.7.1 (2022-05-13) ===
+=== 0.7.1 (unrealeased) ===
 - badges revamped
 - README.md for PyPi
 
