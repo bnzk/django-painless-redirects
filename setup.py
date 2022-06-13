@@ -47,6 +47,7 @@ setup(
     version=app.__version__,
     description=read('DESCRIPTION'),
     long_description=read('README.md'),
+    long_description_content_type="text/markdown",
     license='The MIT License',
     platforms=['OS Independent'],
     keywords='django, redirect',
