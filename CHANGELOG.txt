@@ -2,7 +2,7 @@
 - contrib packages that add redirects automagically
 
 
-=== 0.7.1 (unrealeased) ===
+=== 0.7.1 (2022-06-14) ===
 - badges revamped
 - README.md for PyPi
 - Django 4.0 compatibility established
