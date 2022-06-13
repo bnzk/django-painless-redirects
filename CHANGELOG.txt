@@ -5,6 +5,8 @@
 === 0.7.1 (unrealeased) ===
 - badges revamped
 - README.md for PyPi
+- Django 4.0 compatibility established
+- Python 3.10 in test matrix
 
 
 === 0.7.0 (2022-03-16) ===
