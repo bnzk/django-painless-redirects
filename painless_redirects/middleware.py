@@ -1,11 +1,8 @@
-# coding: utf-8
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django import http
-from django.utils.encoding import force_text
-from django.utils.http import urlquote
+from django.utils.encoding import force_str
 from django.contrib.sites.models import Site
+import urllib
 
 from .models import Redirect, RedirectHit
 from . import conf
@@ -43,7 +40,7 @@ class ForceSiteDomainRedirectMiddleware(object):
         new_uri = '%s://%s%s%s' % (
             request.is_secure() and 'https' or 'http',
             site.domain,
-            urlquote(request.path),
+            urllib.parse.quote(request.path),
             len(request.GET) > 0 and '?%s' % request.GET.urlencode() or ''
         )
         return http.HttpResponsePermanentRedirect(new_uri)
@@ -107,11 +104,11 @@ class ManualRedirectMiddleware(object):
         # prepare basics
         host = request.get_host()
         current_site = Site.objects.get_current()
-        current_path = force_text(request.path)
+        current_path = force_str(request.path)
         current_path_only = current_path
         querystring = request.META.get('QUERY_STRING', None)
         if querystring:
-            current_path = '{}?{}'.format(current_path_only, force_text(querystring))
+            current_path = '{}?{}'.format(current_path_only, force_str(querystring))
         current_path = current_path[:conf.INDEXED_CHARFIELD_MAX_LENGTH]
 
         # path and domain

@@ -3,7 +3,6 @@ include LICENSE
 include DESCRIPTION
 include CHANGELOG.txt
 include README.md
-include PYPI.rst
 graft painless_redirects
 global-exclude __pycache__
 global-exclude *.orig *.pyc *.log *.swp

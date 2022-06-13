@@ -32,6 +32,11 @@ from setuptools import setup, find_packages
 import painless_redirects as app
 
 
+def read(fname):
+    # read the contents of a text file
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+
 install_requires = [
     'django',
 ]
@@ -40,8 +45,9 @@ install_requires = [
 setup(
     name="django-painless-redirects",
     version=app.__version__,
-    description='like django.contrib.redirects on steroids. maybe.',
-    long_description=open(os.path.join(os.path.dirname(__file__), 'PYPI.rst')).read(),
+    description=read('DESCRIPTION'),
+    long_description=read('README.md'),
+    long_description_content_type="text/markdown",
     license='The MIT License',
     platforms=['OS Independent'],
     keywords='django, redirect',
