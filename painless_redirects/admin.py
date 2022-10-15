@@ -22,7 +22,7 @@ class RedirectAdmin(admin.ModelAdmin):
     search_fields = ['old_path', 'domain', 'new_path', ]
     list_display_links = []
     list_display = ('old_loc', 'new_path', 'total_hits', 'enabled', 'permanent', 'ignored', 'auto_created',)
-    list_editable = ('enabled', 'ignored', 'new_path', 'permanent')
+    # list_editable = ('enabled', 'ignored', 'new_path', 'permanent')
     list_filter = [
         'enabled',
         'ignored',
@@ -67,7 +67,10 @@ class RedirectAdmin(admin.ModelAdmin):
 
     # https://stackoverflow.com/a/24799844/1029469
     def changelist_view(self, request=None, extra_context=None):
+        print(request.POST)
+        print(request.method)
         if 'action' in request.POST and request.POST['action'] in self.actions:
+            print("asdvaisdvlaisdvlnasdnlvdasnil")
             if not request.POST.getlist(ACTION_CHECKBOX_NAME):
                 post = request.POST.copy()
                 for u in Redirect.objects.all()[:10]:
@@ -76,6 +79,8 @@ class RedirectAdmin(admin.ModelAdmin):
         return super().changelist_view(request, extra_context)
 
     def set_ignored(self, request, queryset):
+        print("set_ignrore")
+        print(queryset)
         queryset.update(ignored=True)
     set_ignored.short_description = "Ignore selected"
 

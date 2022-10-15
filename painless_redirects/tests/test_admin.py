@@ -40,15 +40,24 @@ class PainlessAdminTests(TestCase):
         response = self.client.get(url, follow=True)
         self.assertEqual(response.status_code, 200)
 
-    def test_admin_action_ignor(self):
+    def test_admin_action_ignore(self):
         self.client.login(username=self.USER, password=self.PASSWORD)
         obj = Redirect.objects.create(
             old_path="/the-old-path/",
             new_path="/the-new-path/",
         )
         url = reverse('admin:painless_redirects_redirect_changelist')
-        response = self.client.get(url, follow=True)
-        self.assertEqual(response.status_code, 200)
-        url = reverse('admin:painless_redirects_redirect_change', args=(obj.id, ))
-        response = self.client.get(url, follow=True)
-        self.assertEqual(response.status_code, 200)
+        data = {
+            # csrfmiddlewaretoken: xXBOESWn3YbibfJLW1Q1i348dUe0WDlYCf5JsXVoxbRkfGTJ9fkaHCG5dbDmNu9T
+            'action': 'set_ignored',
+            'select_across': 0,
+            'index': 0,
+            '_selected_action': obj.id,
+        }
+        print(url)
+        print(data)
+        response = self.client.post(url, data, follow=False)
+        self.assertLess(response.status_code, 400)
+        print(response.content)
+        obj = Redirect.objects.get(pk=obj.id)
+        self.assertTrue(obj.ignored)
