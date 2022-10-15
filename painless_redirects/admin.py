@@ -25,9 +25,9 @@ class RedirectAdmin(admin.ModelAdmin):
     list_editable = ('enabled', 'ignored', 'new_path', 'permanent')
     list_filter = [
         'enabled',
+        'ignored',
         'auto_created',
         'wildcard_match',
-        'ignored',
         'permanent',
         'site',
         'new_site',
