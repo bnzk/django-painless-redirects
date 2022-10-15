@@ -49,15 +49,12 @@ class PainlessAdminTests(TestCase):
         url = reverse('admin:painless_redirects_redirect_changelist')
         data = {
             # csrfmiddlewaretoken: xXBOESWn3YbibfJLW1Q1i348dUe0WDlYCf5JsXVoxbRkfGTJ9fkaHCG5dbDmNu9T
-            'action': 'set_ignored',
+            'action': 'saaaet_ignored',
             'select_across': 0,
             'index': 0,
-            '_selected_action': obj.id,
+            '_selected_action': 99,
         }
-        print(url)
-        print(data)
         response = self.client.post(url, data, follow=False)
         self.assertLess(response.status_code, 400)
-        print(response.content)
         obj = Redirect.objects.get(pk=obj.id)
         self.assertTrue(obj.ignored)

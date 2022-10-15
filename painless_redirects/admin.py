@@ -67,10 +67,7 @@ class RedirectAdmin(admin.ModelAdmin):
 
     # https://stackoverflow.com/a/24799844/1029469
     def changelist_view(self, request=None, extra_context=None):
-        print(request.POST)
-        print(request.method)
         if 'action' in request.POST and request.POST['action'] in self.actions:
-            print("asdvaisdvlaisdvlnasdnlvdasnil")
             if not request.POST.getlist(ACTION_CHECKBOX_NAME):
                 post = request.POST.copy()
                 for u in Redirect.objects.all()[:10]:
