@@ -12,7 +12,7 @@ except NameError:
 
 from django.contrib.sites.models import Site
 from django.http import QueryDict
-from django.test import TestCase
+from django.test import TestCase, modify_settings
 from django.test import override_settings
 from mock import Mock
 
@@ -28,6 +28,11 @@ auto_create = override_settings(
 )
 
 
+@modify_settings(
+    MIDDLEWARE={
+        'append': 'painless_redirects.middleware.ForceSiteDomainRedirectMiddleware',
+    }
+)
 class ForceSiteDomainRedirectMiddlewareTestCase(TestCase):
 
     def setUp(self):

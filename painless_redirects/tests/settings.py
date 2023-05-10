@@ -97,7 +97,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    "painless_redirects.middleware.ForceSiteDomainRedirectMiddleware",
+    # add it in tests, so that it doesnt get in the way when testing other things
+    # 'painless_redirects.middleware.ForceSiteDomainRedirectMiddleware',
 ]
 
 INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS

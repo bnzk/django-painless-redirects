@@ -1,4 +1,5 @@
 import django
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 
@@ -49,10 +50,10 @@ class PainlessAdminTests(TestCase):
         url = reverse('admin:painless_redirects_redirect_changelist')
         data = {
             # csrfmiddlewaretoken: xXBOESWn3YbibfJLW1Q1i348dUe0WDlYCf5JsXVoxbRkfGTJ9fkaHCG5dbDmNu9T
-            'action': 'saaaet_ignored',
+            'action': 'set_ignored',
             'select_across': 0,
             'index': 0,
-            '_selected_action': 99,
+            '_selected_action': obj.id,
         }
         response = self.client.post(url, data, follow=False)
         self.assertLess(response.status_code, 400)
