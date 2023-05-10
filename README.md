@@ -1,6 +1,6 @@
 # django painless redirects
 
-[![CI](https://img.shields.io/github/workflow/status/bnzk/django-painless-redirects/CI.svg?style=flat-square&logo=github "CI")](https://github.com/bnzk/django-painless-redirects/actions/workflows/ci.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/bnzk/django-painless-redirects/ci.yml?style=flat-square&logo=github "CI")](https://github.com/bnzk/django-painless-redirects/actions/workflows/ci.yml)
 [![Version](https://img.shields.io/pypi/v/django-painless-redirects.svg?style=flat-square "Version")](https://pypi.python.org/pypi/django-painless-redirects/)
 [![Licence](https://img.shields.io/github/license/bnzk/django-painless-redirects.svg?style=flat-square "Licence")](https://pypi.python.org/pypi/django-painless-redirects/)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/django-painless-redirects?style=flat-square "PyPi Downloads")](https://pypistats.org/packages/django-painless-redirects)
