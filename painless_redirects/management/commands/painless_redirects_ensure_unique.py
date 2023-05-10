@@ -18,5 +18,5 @@ class Command(BaseCommand):
                 redirects_referers[hit.redirect.id].append(hit.referer)
             else:
                 if hit.referer in redirects_referers[hit.redirect.id]:
-                    print("found duplicate: {} / {}".format(hit.redirect, hit.referer))
+                    self.stdout.write("found duplicate: {} / {}".format(hit.redirect, hit.referer))
                     hit.delete()

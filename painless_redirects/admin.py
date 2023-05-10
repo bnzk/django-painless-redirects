@@ -67,19 +67,15 @@ class RedirectAdmin(admin.ModelAdmin):
 
     # https://stackoverflow.com/a/24799844/1029469
     def changelist_view(self, request=None, extra_context=None):
-        print("changelist_view")
         if 'action' in request.POST and request.POST['action'] in self.actions:
             if not request.POST.getlist(ACTION_CHECKBOX_NAME):
                 post = request.POST.copy()
                 for u in Redirect.objects.all()[:10]:
                     post.update({ACTION_CHECKBOX_NAME: str(u.id)})
                 request._set_post(post)
-        print(request.POST)
         return super().changelist_view(request, extra_context)
 
     def set_ignored(self, request, queryset):
-        print("set_ignrore")
-        print(queryset)
         queryset.update(ignored=True)
     set_ignored.short_description = "Ignore selected"
 
